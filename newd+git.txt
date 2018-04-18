@@ -35,7 +35,7 @@
 		撤回远程仓库到某一版本
 			git log  查看对应的日志
 			git reset --hard   commit_id   本地撤回到指定的commit
-				git push origin <master> --force  将次分支推送到远程
+				git push -f -u origin master  将次分支推送到远程
 
 
 三、ubuntu
