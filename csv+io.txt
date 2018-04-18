@@ -1,0 +1,18 @@
+def csv_writerow(writer, row):
+    writer.writerow([d for d in row])  #将数据写入csv中
+
+def writer_csv(file_name,title_list,query):
+    csvfile = io.StringIO()      #缓存（py3 import io  ，py2 import cString）
+    writer = csv.writer(csvfile) #将数据写入缓存中
+    csv_writerow(writer, title_list) #调用写数据的方法（写表头）
+    for row in query:    
+        row = list(row)
+        index_type = [1,2,3]
+        promoter_type = [u'高级推广员',u'中级推广员',u'初级推广员']
+        row[5] = promoter_type[index_type.index(row[5])]
+        row[6] = '%.2f'%(row[6]/100)
+        csv_writerow(writer, row)  #（写内容）
+    response = make_response(csvfile.getvalue().encode('utf-8'))    #从缓存中获取数据转化格式  from flask import make_response
+    response.headers.add("Content-Disposition","attachment", filename=(file_name + '.csv').encode('utf-8'))   #下载
+    
+    return response

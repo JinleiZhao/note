@@ -1,0 +1,19 @@
+1、制作秘钥私钥
+2、进入到~/.ssh创建config文件（或/etc/ssh/ssh_config)配置如下
+
+Host tiaoban
+    HostName 192.168.8.174
+    Port 22
+    User zhao   #进入跳板时所用的用户   
+
+Host server
+    HostName 192.168.8.1
+    Port 22
+    User yaya   #进入服务器所用的用户
+    ProxyCommand ssh -q -W %h:%p tiaoban
+    IdentityFile ~/.ssh/id_rsa    #密钥在同目录下额不写
+
+
+
+3、执行命令 ssh yaya@server 
+

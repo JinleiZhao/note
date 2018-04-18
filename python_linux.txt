@@ -1,0 +1,135 @@
+一、os模块
+    1、文件与路径
+        a、os.getcwd()获取文件路径(目录)
+        b、os.listdir() 获取当前目录下的所有文件 
+    2、路径的拆分
+        a、path=os.path.abspath(__file__)获取文件的绝对路径(/x/x.t)   
+        b、os.path.split(path)将文件拆分成目录和文件  
+        c、os.path.dirname(path)获取文件的路径
+        d、os.path.basename(path)获取文件的名字
+        e、os.path.splitext(path)将路径在文件在扩展名出进行切分
+        f、os.path.expanduser('~')获取用户home或home目录下的文件
+        g、os.path.join('','')拼接路径
+    3、获取文件属性及类型(os.path.)
+        a、getatime 文件的访问时间
+        b、getmtime 文件的修改时间
+        c、getctime 文件的创建时间
+        d、getsize 获取文件的大小
+        e、exists(path) 参数的路径是否存在
+        f、isfile       参数的           ，并且是一个文件
+        g、isdir                         ，         目录
+        h、islink                        ，         链接
+        i、ismount                       ，         挂载点
+    4、管理文件和目录
+        a、os.chdir(path) 切换工作目录
+        b、os.unlink/remove(path)删除path路径指向的文件
+        c、os.rmdir(path) 删除空目录
+        d、os.mkdir(path) 创建一个文件夹
+        e、os.rename(‘name’,'n_name') 重命名文件或文件夹
+    5、权限判断
+       os.access(filename,param)
+       param:os.R_OK 可读 
+             os.W_OK 可写
+             os.X_OK 可执行
+    6、os.walk 遍历目录树 
+        for root，dirnames,filenames in os.walk('~'):
+            root:当前 【查阅】 目录，
+            dirnames：当前目录下的子目录
+            filenames：当前目录下的文件列表
+       注：若要忽略掉某一个子目录，则可直接修改三元组中的dirnames
+           if ‘remove_dir’ in dirnames:
+               dirnames.remove('remove_dir')    
+二、fnmatch模块匹配文件(import fnmatch)
+    1、fnmatch.fnmatch(filename,pattern) 判断文件名是否符合特定的模式
+    2、        fnmatchcase              不区分大小写
+    3、fnmatch.filter(filename_list,parttern) 返回文件列表中符合的文件列表
+    4、glob(import glob) glob.glob(pattern) 返回符合的文件列表
+三、高级文件处理接口
+    1、shutil模块
+        a、copy(fileame,new_filename) 复制文件
+        b、copytree(dir1,dir2)  复制目录
+        c、move(file1,file2/dir2)  移动
+        d、shutil.rmtree 不管目录是否为都可以删除
+    2、filecmp 目录和文件比较
+        a、filecmp.cmp(file1,file2) 比较单个文件相同返回true，不相同返回false 
+        b、cmpfiles 比较多个文件(如两个目录)，返回的是一个三元组(相同文件，不同文件，无法比较文件)
+        c、dircmp('dir1','dir2')返回一个dircmp对象
+    3、hashlib 文件md5校验码
+        hs = hashlib.md5()
+        hs.update(**)编译成MD5
+        hs.hexdigest()显示
+四、python管理压缩包
+    1、tarfile 可以处理tar.gz 或tar.bz2
+        A、解压
+            with tarfile.open('tarfile.tar') as t:
+		    a、t.getmembers() 获取tar中的文件列表(是个对象列表[属性：name，get_info等])
+		    b、t.getnames() 返回的是文件名称的列表
+		    c、t.extract(filename,path='/') 只提取某个文件
+		    d、t.extractall(path='/') 提取所有文件
+        B、创建压缩包：
+            with tarfile.open('tarfile.tar',mode='w') as out:
+                out.add('xxx')
+            [mode='r/w:gz/bz2' 以tar.gz/tar.bz2 的方式解压获取创建]   
+    2、zipfile   创建和读取zip压缩包
+        A、读取zip文件
+            f = zipfile.ZipFile('zip.zip')
+            a、f.namelist() 返回zip文件中包含的所有列表
+            b、f.extract(file,path) 提取单个文件
+            c、f.extractall(path，[pwd='passwd']) 提取所有文件
+        B、创建文件
+            f =  zipzfile.ZipFile('zip.zip','w')
+            f.write('example.txt')
+            f.close()
+        C、命令行使用python zipfile方法
+            a、python -m zipfile -c zip.zip file1 file2 创建zip文件
+            b、                  -e zip.zip  dir/ 提取
+            c、                  -l zip.zip  显示文件列表
+     3、shutil 
+         a、创建压缩包
+             shutil.make_archive('filename',mod,[path])
+             [mod参数：bztar(bz2)\gztar(gz)\tar\zip]
+         b、读取压缩包  
+             shutil.unpack_archive(filename,[path],[mod])
+
+五、执行外部命令：
+    1、subprocess
+        A、便利函数
+            a、subprocess.call(['ls','-l'])
+               subprocess.call(['psql','-U','zhao','-h','localhost','-d','game']) 有参数时用列表或元祖，无参数时可以直接用字符串
+            b、check_call() 同 call类似，失败返回0，并抛错          
+        B、Popen类
+            a、wait：等待子进程结束
+    		b、poll：检查子进程状态
+  			c、kill：给子进程发送SIGKILL信号终止子进程
+  			d、send_signal：向子进程发送信号
+            e、communicate：与子进程交互
+       		eg：
+ 				p = subprocess.Popen(cmd,
+									 shell = True,        										 stdin = subprocess.PIPE,
+									            stdout = subprocess.PIPE,
+									 stderr = ssubprocess.PIPE
+								     )
+        		stdout, stderr = p.communicate()
+  				if p.returncode != 0 : 返回码不为零则命令有误
+					return p.returnode,stderr
+ 				return p.returncode,stdout
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

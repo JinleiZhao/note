@@ -1,0 +1,51 @@
+一、安装	
+	make 编译nginx文件报错   (阿里云的服务器直接apt 安装，若编译安装时会把ipv6地址也添加到配置文件，需将其注释掉)
+		cc1: all warnings being treated as errors
+		make[1]: *** [libarchive/archive_cryptor.lo] Error 1
+		make[1]: Leaving directory `/home/ubuntu/libarchive'
+		make: *** [all] Error 2
+	解决：
+	$ 	export CFLAGS="-Wno-error"
+	$ 	export CXXFLAGS="-Wno-error"
+	$ 	./configure
+	$ 	make
+	$ 	sudo make install
+
+
+	https://juejin.im/entry/58eb912c8d6d810061908b90
+
+	http://www.cnblogs.com/Ray-liang/p/4173923.html
+
+二、配置(uwsgi配置)
+	listen 80;
+		#listen [::]:80 default_server;
+		server_name  192.168.8.162;    # nginx在只有一个server的时候会忽略这个选项，
+		charset utf-8;
+		location / {
+		        # First attempt to serve request as file, then
+		        # as directory, then fall back to displaying a 404.
+		        #try_files $uri $uri/ =404
+		        include uwsgi_params;
+		        uwsgi_pass 127.0.0.1:6001;
+		        uwsgi_param UWSGI_PYHOME   /home/yaya/Desktop/vote/votenv;
+		        uwsgi_param UWSGI_CHDIR    /home/yaya/Desktop/vote;
+		        uwsgi_param UWSGI_SCRIPT   manage;
+		        uwsgi_param UWSGI_CALLABLE vote;
+		        }                                                        
+	a、修改nginx值需重启nginx，修改项目文件只需重启supervisor
+    b、重启时出错使用nginx -t -c /etc/nginx/nginx.conf查看出错位置
+    c、检查supervisor出错：/usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+ 
+三、日志管理：
+	1、去除心跳日志：在第一个localtion前面加上 localtion = / {     或者localtion / {}中加入两行命令
+						 access_log off;
+						 error_log  off;
+  					}
+
+四、启动文件(ubuntu)
+	1、命令位置：/usr/sbin/
+	2、检查nginx.conf配置  sudo ./nginx -t
+	3、重启 sudo ./nginx -s reload
+	4、停止 sudo ./nginx -s stop
+
+

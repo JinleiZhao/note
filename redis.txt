@@ -1,0 +1,84 @@
+命令参考文献  http://doc.redisfans.com/index.html
+一、五种数据类型：string(字符串)、list(链表)、set(集合)、hash(无序散列表)、zset(有序集合)
+二、操作
+    1、字符串：get 、set、del  （一个键名对应一个字符串）
+    2、列表：（一个键对应一个列表，列表中的元素可以相同）
+		a、rpush 右端推入值（lpush)
+	        b、lindex  获取给定位置上的单个元素
+		c、lpop 从左侧弹出并返回弹出的值（rpop）
+		d、lrange 获取给定范围上的所有数值   eg：lrange mylist 0 -1 （该键对应的所有数据）
+	3、集合：（集合中元素各不相同，无需排列）
+		a、sadd 添加给定元素到集合
+		b、smembers 返回集合中包含的所有元素
+		c、sismembers  判断成员是否在集合里
+		d、srem 移除给定的元素
+	4、散列：可以存储多个键值对之间的映射（键名下面是以键值对存在的，键是不同无序，值可以是字符串和数字）
+		a、hset 在散列里面关联起给定的键值对（hmset(可操作多个)key field value [field value ...] ）   eg：hset myhashkey key1  value1
+		b、hget 获取制定散列键的值（hmget key field [field ...]）
+		c、hgetall 获取散列包含的所有的键值对  eg：hgetall(keyname).values() --->(获取键下所有的值)
+		d、hdel 删除指定散列键对应的值  hdel key fiels value
+                   delete    delete key
+  	5、有序集合：（键值对存在，键称为成员(不同)，值称为分值(必须为浮点数)）
+		a、zadd 将给定分值的成员添加到有序集合里  eg： zadd myzsetkey 728 member1
+		b、zrange 根据位置获取元素  eg：zrange myzsetkey 0 -1 withscores   
+		c、zrangebyscore 获取分值在给定范围内的所有元素  eg: zrangebyscore myzsetkey 0 800 withscores   
+		d、zrem 删除给定成员对应的分值
+	6、获取数据库中所有的键：
+		keys [partten(可以进行匹配)] 返回列表的形式
+
+三、python操作hash简例（所有返回的数都是二进制，需要decode转化成utf-8）：
+    import redis
+	r = redis.Redis(host="127.0.0.1",port=6379,password="",db=0)  
+		#链接本地redis(redis.Redis应换成redis.StrictRedis（后者使用官方的语法和命令，前者是后者的子类主要针对旧版本的redis.py）)
+	print r.hgetall("mykey:gg:1")  #获取键名下的所有键值对，返回字典形式
+	print r.hgetall("mykey:gg:1").values()  #获取键名下的所有值，返回列表形式  == r.hvals('mykey:gg:1')
+	print r.hgetall('mykey:gg:1').keys()	#获取键名下的所有键，返回列表形式  == r.hkeys('  ')
+	print r.hscan('mykey:gg:1',cursor=0,match="name") #通过迭代获取键值，match 后面跟键的正则，
+												eg:  print r.scan(0,match='mykey:gg:*')
+	mkey = r.keys("mykey:gg:*")     #获取所有的匹配键名（生产环境下避免用keys，尽量用scan）
+ 	print mkey
+	for key in mkey:
+		print r.hget(key,'name')     #获取键名下键的对应值
+
+四、redis做有效时间验证(短信验证码)：
+	code = str(randint(100000,999999))   #生成验证码
+	send_sms #发送短信的过程  
+	r.set('sms_' + mobile, code)
+    r.expire('sms_' + mobile, 600)    #短信发送成功后执行这两个语句，存入redis并设置有效时间   --->>r.set('sms_'+mobile,code,600)
+
+	def check_code(mobile, code):     #验证函数(参数为前端获取的验证码手机号)
+		k = 'sms_' + mobile
+		if r.get(k).decode('utf-8') == code:
+		    r.delete(k)               #验证成功后删除此组验证消息(注：若k没在redis中返回值为空，若此时前端获取的code是空，							
+    									仍返回true，所以应先判断获取值是否为空)
+		    return True
+		return False
+
+五、FlaskRedis
+	1、引入：from flask_redis import FlaskRedis
+	2、实例化：redis_store = FlaskRedis(app)
+	3、利用redis的pipeline存储（pipeline是多条命令执行完后一次性返回结）
+	例：redis_store.pipeline().hmset('user_key',{
+		            'key1':'value1'
+		        }).expire('user_key',expire_time()(过期时间)).execute()
+
+六、redis 配置：[/etc/redis/redis.conf]
+    1、修改密码：   #requirepass foobared去掉注释，foobared改为自己的密码，修改完后重启redis
+    2、切换数据库 进入数据库执行：select db
+    3、绑定指定的地址：修改bind：xxx  xxx为指定绑定的地址
+    4、不限制绑定：a、讲bind注释，b、protected-mode yes 将yes换成no
+
+七、redis事物
+    1、redis语法①： [watch keys >>  unwatch(当监控的键存在时执行此语句停止监控) ] multi(启用)  >>  set ***(redis语句放入队列)  >> 
+ 											exec(提交)/	discard(取消)
+    2、python-redis: [ conn = conn.pipeline() ][conn.watch(keys)(新创建的键) >> unwatch() ]  >> conn.multi() >> conn.set ***(redis数据操作) >> 																												conn.execute()
+
+八、同一台服务器上配置多个redis实例(使用不同的端口启动)
+    1、在/etc/redis/复制redis.conf文件并重命(名如redis6001.conf)
+    2、vim 打开redis6001.conf文件修改文件(如下)
+		a、pidfile : pidfile/var/run/redis/redis_6001.pid
+		b、port 6380
+		c、logfile : logfile/var/log/redis/redis_6001.log
+		d、rdbfile : dbfilename dump_6001.rdb
+	3、启动分支redis ：sudo redis-server /etc/redis/redis6001.conf
+

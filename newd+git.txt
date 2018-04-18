@@ -1,0 +1,59 @@
+
+1、设置ubuntu火狐浏览器中文：在输入框中输入about:config 将如下项进行如下设置
+			 		general.useragent.locale;      zh-hans
+
+2、lantern   github   直接安装运行
+
+4、linux 中Ctrl+s 锁住屏幕，Ctrl+q解锁
+5、redis：安装：sudo apt-get update   sudo apt-get install redis-server
+       	  启动：redis-server
+		  进入：redis-cli
+		  更改密码： config set requirepass root
+		  更改完之后需要认证： auth ‘root’(每次登录是需运行)
+
+6、pip安装是抛出 error: invalid command 'bdist_wheel' 可以尝试pip  install wheel
+7、super() 
+
+8、修复依赖关系删除参与应用：sudo apt --fix-broken install
+
+二、
+    1、git操作：
+		git diff 比较两个文件的差异
+		git  status 显示状态
+		git rebase master 与master合并    (git checkout master  合并在分支，切换回主分支，git merge monday
+		与分支同步，)
+		git commit -a -m ""    (添加新的文件需要add  否则可以直接git commit )
+		git push 
+		git branch  name 创建分支  git checkout -b newname
+		git checkout name  切换分支
+		git checkout -f   取消本地操作
+		git branch -d  删除分支
+		git checkout -b newname
+		https://www.pandafan.org/
+		在分支上 add  commit  切回主分支  git pull   合并git merge   提交git push
+		分支合并主分支  git rebase master
+		撤回远程仓库到某一版本
+			git log  查看对应的日志
+			git reset --hard   commit_id   本地撤回到指定的commit
+				git push origin <master> --force  将次分支推送到远程
+
+
+三、ubuntu
+    1、gedit无法打开文件(默认ubuntu图形化不能打开一些文件需执行‘xhost +’ 命令)
+    2、查找并删除文件：sudo find -name '*.ddty' -exec rm {} \;
+    3、配置shadowsocks：
+        a、sudo apt-get install shadowsocks 
+        b、修改配文件 /etc/shadowsocks/config.json,填写服务器地址端口和密码
+        c、chrome翻墙，下载插件 SwitchyOmega ：选择代理(proxy)/协议选择socks5，服务器和端口填写local的端口和地址
+        d、启动shadowsocks : sslocal [ -c (不在config目录时需要此参数) ] /etc/shadowsocks/config.json
+        e、可以将shadowsocks添加到supervisor，编写定时清理log定时任务   
+    4、查看当前内核： dpkg -l 'linux-image-*' | grep '^ii'
+
+  ` 
+
+
+
+
+
+
+

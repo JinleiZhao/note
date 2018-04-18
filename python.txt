@@ -1,0 +1,105 @@
+1、创建二维码模块  qrcode
+	
+	def make_image(data):
+	    qr = qrcode.QRCode(version=1, error_correction=qrcode.ERROR_CORRECT_H,\
+					 box_size=10, border=3)  #配置信息	
+	    qr.add_data(data)      #二维码显示的数据
+	    qr.make(fit=True)      
+	    return qr.make_image()   #生成二维码
+
+	def make_image_path(image_url,promoter_id):     #保存二维码
+	    path = os.path.join(os.path.dirname(__file__),'static/img/qrcode')  #保存路径
+	    if not os.path.exists(path):  
+		    os.makedirs(path)
+	    path1 = os.path.join(path,str(promoter_id)+'.png') #图片 链接
+	    img = make_image(image_url)   
+	    img.save(path1)   #保存图片
+	    path1 = '/static'+path1.split('static')[1]   #对图片地址进行处理以便保存到数据库中
+	    return path1
+
+2、红包算法：
+    ''' m = money n = count  min=1'''
+    m_n = [random.random() for i in range(n)]     #随机生成n个0-1 的数，红包数
+    m_list = [int(j/sum(m_n)*(m - n))+1 for j in m_n]
+                #每个包占总包的百分比×除去每个包的基数1剩下的书，用int向下取整 
+    extra_m = m - sum(m_list) #剩下的数量
+    index_n=[random.randint(0,n-1) for k in range(extra_m)]  #剩下的随机每个包一个
+    for i in range(extra_n):
+        m_list[index_n[i]] += 1  
+		#现获取对应包，在根据包的索引找到红包中的对应的包，在加1
+    return n_list
+
+
+3、{{ url_for('static',filename='xxx/xxx.xx') }}
+   {{ url_for('login') }}
+4、synchronize_session用于query在进行delete or update操作时，对session的同步策略。   https://www.jianshu.com/p/30e2a21638b1
+5、EXTRACT() 函数用于返回日期/时间的单独部分，比如年、月、日、小时、分钟等等
+6、make_response()函数可以接受1个、2个、或3个参数（和试图函数返回值一样）病返回一个response对象
+7、redirect  重定向
+
+8、Python装饰器（decorator）在实现的时候，被装饰后的函数其实已经是另外一个函数了（函数名等函数属性会发生改变），为了不影响，最好在实现之前加上functools的wrap，它能保留原有函数的名称和docstring。
+def my_decorator(func):  
+    @wraps(func)  
+    def wrapper(*args, **kwargs): 
+
+9、字符串格式的字典或列表。。可以 使用eval转化成对应的列表或字符串
+
+10、datetime ,time
+    import time
+    from datetime import datetime,timedelta
+    #now = datetime(2018,2,26,0,23,23,12313)    datetime将指定日期转化为datetime格式
+	now = datetime.now()     
+	print(now)
+	date_ = now - timedelta(hours=now.hour,minutes=now.minute,seconds=now.second)  计算当天的0点
+	after_date = date_ + timedelta(days=1)     明天的零点
+	extra_time = after_date - now              时间差
+	timestring = '1970-01-01 %s'%extra_time    时间字符串
+	now_ = time.mktime(time.strptime(timestring, '%Y-%m-%d %H:%M:%S')) - time.timezone  #time将时间字符串转化为时间戳
+    补：
+      datetime.now().date()   获取年月日
+	  datetime.now().time()   获取时间
+    date_str = datetime.strftime("%Y-%m-%d %H:%M:%S")  #datetime格式转化字符串
+11、python操作postgresql     参考：https://www.yiibai.com/html/postgresql/2013/080998.html
+    import psycopg2
+    
+12、pip 自升级：pip install pip -U -q  #-q表示静默安装
+13、python发布包的命令:
+    try:
+        from setuptools import setup  #手动安装
+    expect ImportError:
+        from distutils.core import setup  
+
+14、排序模块 bisect(list为已排序列表)
+    a、bisect.insort(list,data)  #插入到到对应位置
+    b、bisect.bisect(list,data)  #返回元素data要插入的位置，不添元素
+	c、bisect.bisect_left(list,data) #从左端开始查询，返回位置(从0开始0>1>2>3>4)
+    d、bisect.bisect_right(list,data) #从右端开始查询，返回位置(从len(list)开始5>4>3>2>1 )
+    e、bisect.insort_left(list,data)  #插入data到list中(从左侧开始)
+    f、bisect.insort_right(list,data) #......(从右侧开始)
+  
+15、if语句
+	bind_at_str = player.bind_at.strftime("%Y-%m-%d %H:%M:%S") if player.bind_at else ''  
+             #如果bind_at存在则进行时间格式化，如不存在则设置为空
+    s = value1 if 表达式1  else  value2  [如果表达式1成立s=value1否则s=value2]
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
