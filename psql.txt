@@ -1,20 +1,30 @@
-1、sudo su postgres  创建用户
-   psql postgres  进入到此用户的数据库
-   ALTER USER postgres with PASSWORD 'postgres'  更改密码
-   create database votedb  owner postgres; 给用户创建数据库
-   psql -U postgres -h 127.0.0.1 -d votedb;  链接该用户的votedb库
-    GRANT ALL PRIVILEGES ON DATABASE mahjong TO postgres;  把数据库的所有权限给这个用户
-    \dt  查看表   \l  查看多少库
-   drop table alembic_version   删除某个表
-   delete from 表明 清空表
-2、p_gsql 导出数据 pg_dump -U postgres -t system_calls(表名) wangye(库名) > ./test.sql  
-  导入数据：$ psql -d newdatabase -U postgres -f mydatabase.sql   // sql 文件在当前路径下
-	 $psql -U zhao -d game -h localhost</home/yaya/Downloads/2018-01-02_14_09_14_test.sql// sql 文件不在当前路径下
-	 sudo -u wjy sh -c 'psql game < /home/wangjianyu/2018-01-02_14:09:14_test.sql'
+一 、数据库的创建：
+	1、切换postgres ：sudo su - postgres （相当与数据库的root用户，可以创建数据库并对任何其他数据库都有操作权限）
+	2、psql 进入数据库,以postgres用户（root）
+	3、create user myblog with password 'myblog'; 创建数据库的用户和密码 
+       ALTER USER postgres with PASSWORD 'postgres'  更改密码
+	4、create database myblog owner myblog;  创建数据库，并设置数据库的所有者
+	5、GRANT ALL PRIVILEGES ON DATABASE myblog to myblog; 设置用户的权限
+    6、退出登录
+二、数据库操作
+	1、psql -U user -h 127.0.0.1 -d database;  链接数据库
+    2、\dt查看表；\l 查看多少库；\c databasename 切换数据库；\x 切换显示方式
+    3、CREATE TABLE table_name(    创建表  
+   							ID INT  PRIMARY KEY  NOT NULL）
+       注意：创建表名时不能使用关键字，否则在select的时候会不显示数据，
+             若使用了关键字则在使用表名时应用双引号引起来"table_name"(关键字 user ...)
+    4、\d 表名 查看表结构
+  	5、drop table alembic_version 删除某个表
+    6、delete from 表名 清空表
+三、数据库导入导出
+    1、导出：
+        p_gsql 导出数据 pg_dump -U postgres -t system_calls(表名) wangye(库名) > ./test.sql  
+    2、导入数据：
+        a、$ psql -d newdatabase -U postgres -f mydatabase.sql   // sql 文件在当前路径下
+	    b、$psql -U zhao -d game -h localhost < /home/yaya/Downloads/2018-01-02_14_09_14_test.sql// sql 文件不在当前路径下
+	    c、sudo -u zhao sh -c 'psql game < /home/wangjianyu/2018-01-02_14:09:14_test.sql'
 
-
-3、\d 表名 查看表结构
-   \x 切换显示方式
+   
 
 
 
