@@ -81,7 +81,77 @@ def my_decorator(func):
 	bind_at_str = player.bind_at.strftime("%Y-%m-%d %H:%M:%S") if player.bind_at else ''  
              #如果bind_at存在则进行时间格式化，如不存在则设置为空
     s = value1 if 表达式1  else  value2  [如果表达式1成立s=value1否则s=value2]
-   
+
+16、class获取和设置属性的值   
+    例1：
+        class User(object):
+            def __init__(self,name,score):
+                self.name=name
+                self.score=score
+            
+        student = User('zhang',40)
+        student.score  ==>   40 获取属性的值   
+        student.score = 30   给属性赋值
+        
+    例2：
+        class Student(object):
+            #def __init__(self, name, score):
+            #    self.name = name
+            #    self.__score = score   #__value/_value  则此属性不能直接被赋值，只能通过下面的方法 
+            
+            @property   #@property装饰器的作用是吧方法变成属性调用
+            def score(self):
+                return self.__score
+            
+            @score.setter
+            def score(self, score):
+                if score < 0 or score > 100:
+                    raise ValueError('invalid score')
+                self.__score = score
+            
+            第一个score(self)是get方法，用@property装饰，第二个score(self, score)是set方法，用@score.setter装饰
+            第二个是第一个装饰器的副产品
+
+            @property
+            def name(self):
+                return self.__name
+            
+            @name.setter        
+            def name(self,name):      #若没有此方法则name只有可读属性
+                self.__name = name
+
+        实例详见 class—test.py
+            
+    例3：类的析构和构造
+        __init__ 构造函数：主要用来在创建对象时初始化对象， 即为对象成员变量赋初始值，在Python中构造函数必须通过重写__init__方法实现
+        __del__  析构函数：对象结束其生命周期时，系统自动执行析构函数，一般可以在析构函数中添加关闭文件和数据库等操作
+        详例见 class-test.py
+    
+    例4：__slots__ 限制类的属性
+    
+    例5：类的继承+__slots：
+        class A:
+            def __init__(self,a,b):
+                
+        class B(A):
+            __slots__ = ('c')
+            def __init__(self,a,b,c):
+                A.__init__(self,a,b)  /或super（B,self）.__init__(a,b)
+    
+    例6：__call__ 让类可以向函数一样调用，只需要实现一个特殊方法__call__()。
+
+        class A(object):
+            def __init__(self, a):
+                self.a = a
+
+            def __call__(self, b):
+                self.b = b
+                print(self.b)
+        
+        C = A()
+        c('b')
+
+
 
 
 

@@ -81,4 +81,7 @@
 		c、logfile : logfile/var/log/redis/redis_6001.log
 		d、rdbfile : dbfilename dump_6001.rdb
 	3、启动分支redis ：sudo redis-server /etc/redis/redis6001.conf
+	4、链接： redis-cli -h localhost -p 6001
+       输入密码：auth passwd
+       验证链接：ping  ==>  PONG
 

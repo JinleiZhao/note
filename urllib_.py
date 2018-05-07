@@ -77,6 +77,19 @@ opener = urllib.request.build_opener(proxy_handler)
 response = opener.open('https://www.baidu.com')  # Opener 的 open() 方法打开链接
 print(response.read())
 '''
+data = {
+    'first': 'true',
+    'pn': 1,
+    'kd': 'Python'
+}
+data = parse.urlencode(data).encode('utf-8')
+proxy = request.ProxyHandler({'http': '5.22.195.215:80'})  # 设置proxy
+opener = request.build_opener(proxy)  # 挂载opener
+request.install_opener(opener)  # 安装opener
+page = opener.open(url, data).read()
+page = page.decode('utf-8')
+print(page)
+
 print('6^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 import http.cookiejar
 import urllib.request
