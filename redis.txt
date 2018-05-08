@@ -79,9 +79,11 @@
 		a、pidfile : pidfile/var/run/redis/redis_6001.pid
 		b、port 6380
 		c、logfile : logfile/var/log/redis/redis_6001.log
-		d、rdbfile : dbfilename dump_6001.rdb
+		d、rdbfile : dbfilename dump_6001.rdb   #数据的存储的名称
+        e、daemonize : no #守护进程关闭，此项在使用supervisor时设置
+        [f、dir /var/lib/redis_6001  目录需要创建(可不进行设置)] 改变数据的存储位置
 	3、启动分支redis ：sudo redis-server /etc/redis/redis6001.conf
 	4、链接： redis-cli -h localhost -p 6001
-       输入密码：auth passwd
+       输入密码：auth passwd   (若设置了密码)
        验证链接：ping  ==>  PONG
 
