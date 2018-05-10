@@ -26,10 +26,14 @@ def dif_time():
 
 def unix_time():
     #将python的datetime转换为unix时间戳
+	#dtime = datetime(2018,2,26,0,23,23,12313)
     dtime = datetime.datetime.now()
     un_time = time.mktime(dtime.timetuple())
     print un_time  #1509636609.0
+
     #将unix时间戳转换为python  的datetime
     unix_ts = 1509636585.0
     times = datetime.datetime.fromtimestamp(unix_ts)
-    print times  #2017-11-02 23:29:45
+	times.strftime('%Y-%m-%d %H:%M:%S')  #2017-11-02 23:29:45
+
+

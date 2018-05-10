@@ -6,9 +6,15 @@
 	4、create database myblog owner myblog;  创建数据库，并设置数据库的所有者
 	5、GRANT ALL PRIVILEGES ON DATABASE myblog to myblog; 设置用户的权限
     6、退出登录
+    7、postgres用户下修改某个用户的密码：\password [user(不写表示修改postgres本身密码)]
+    8、\encoding utf8 设置字符集
 二、数据库操作
 	1、psql -U user -h 127.0.0.1 -d database;  链接数据库
-    2、\dt查看表；\l 查看多少库；\c databasename 切换数据库；\x 切换显示方式
+       可分别将user、host、db、port添加到环境变量中，然后直接执行psql即可
+       a、echo "export PGDATABASE=game/PGHOST=/PGPORT=/PGUSER=">> ~/.bashrc
+       b、source ~/.bashrc
+       注：是.bashrc不是.profile或.bash_profile，每次启动中端都会执行.bashrc获取环境变量，其他两个关闭终端既失效
+    2、\dt查看表；\l 查看多少库；\c databasename 切换数据库；\x 切换显示方式 ；\d +表明 显示表的结构 
     3、CREATE TABLE table_name(    创建表  
    							ID INT  PRIMARY KEY  NOT NULL）
        注意：创建表名时不能使用关键字，否则在select的时候会不显示数据，
@@ -16,6 +22,7 @@
     4、\d 表名 查看表结构
   	5、drop table alembic_version 删除某个表
     6、delete from 表名 清空表
+	
 三、数据库导入导出
     1、导出：
         p_gsql 导出数据 pg_dump -U postgres -t system_calls(表名) wangye(库名) > ./test.sql  

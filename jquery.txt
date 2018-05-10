@@ -1,0 +1,85 @@
+一、jQuery页面内容排序url设置
+    1、知识点：
+        1、url.indexOf("a")  // 获取某一字符在url中的位置，索引从0开始，找不到返回-1 ，Of大写的o
+        2、window.location.href = window.location.href  #刷新页面
+        3、url和首个参数之间用？，参数之间用&，:/eam_verify?team_id=1001&team_name=
+    2、例：   
+        $('.sort_method').click(function(){  //a标签的点击事件
+            var url = window.location.href    //获取当前的url
+
+            if (url.indexOf('=')<0 && url.indexOf('sort')<0){ //判断当前url既没有=也没sort关键字
+                window.location.href = url + '?sort=' + $(this).attr('value');
+            }
+            else if(url.indexOf('=')>-1 && url.indexOf('sort')<0){  //判断当前有其他参数但是没有sort关键字
+                window.location.href = url + '&sort=' + $(this).attr('value');
+            }
+            else{   //参数中有sort参数时需要在sort处进行切分，并加上新的sort参数
+                window.location.href = url.split('sort')[0] + 'sort=' + $(this).attr('value');
+            }
+        })
+二、jQuery通过ajax提交
+    1、基本格式：
+        $.ajax({
+            headers:{ //请求头，get提交时后台可以判断json是否在accept来判断get是否通过ajax提交
+                            //if 'json'in request.headers.getlist('accept')[0]:
+            "Accept": "application/json; charset=utf-8",
+            "Content-Type": "application/json; charset=utf-8"
+            }
+            url:'跳转地址/或{{ url_for('statistics_daily_diamond(跳转路由)') }}'
+            type:'post/get'
+            data:{传输的数据}
+            success：function(data){  //ajax成功执行调用函数
+                if(data.succ){  //后台succ=True执行
+                    data.msg(后台传回的消息)
+                }
+                else：    //后台succ=False执行{
+                    data.msg(后台传回的消息)
+                }
+            }
+        })
+    2、注意事项：
+        按钮通过ajax提交时，其type类型不能是submit类型，否则会提交两次
+    3、例：
+        $.ajax({
+            url:'/team/refuse_team',
+            type:'POST',
+            data:{
+                    _csrf_token:_csrf_token,
+                    team_id:team_id,
+                    dialog_comment:dialog_comment   #参数
+            },
+            success:function(data){
+                if(data.succ){
+                    $('#team_id_'+data.team_id).find("td:eq(5)").text('认证失败');
+                    $('#team_id_'+data.team_id).find("td:eq(6)").text('');
+                    alert(data.msg);
+                }
+                else{
+                    alert(data.msg)
+                }
+            }
+        })
+三、input框type=file类型，实时显示上传的图片：
+    1、this和$(this)的区别：
+        this：表示当前操作的html，里面包诸多参数，如files
+        $(this):表示当前操作的html，是一个对象
+    2、例：
+        $('input[name=file2]').change(function(){  #input状态改变事件
+        var file = this.files[0];  #file中的参数：name、size、type等
+
+        if(file.size > 4*1024){     #限制图片上传的大小
+            alert('图片不能超过4K')
+            return false;
+        }
+        
+        if(file){
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(){
+                var html= '<img src="'+this.result+'"style="max-width:100px;max-height:75px">'
+                $('.img_2').empty();
+                $('.img_2').append(html);  #显示
+                };
+            };
+        });
+    3、jQuery实现简单图片上传预览，详见upload_.html
