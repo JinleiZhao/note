@@ -1,18 +1,39 @@
-def csv_writerow(writer, row):
-    writer.writerow([d for d in row])  #将数据写入csv中
+一、上传csv表格
+    def csv_writerow(writer, row):
+        writer.writerow([d for d in row])  #将数据写入csv中
 
-def writer_csv(file_name,title_list,query):
-    csvfile = io.StringIO()      #缓存（py3 import io  ，py2 import cString）
-    writer = csv.writer(csvfile) #将数据写入缓存中
-    csv_writerow(writer, title_list) #调用写数据的方法（写表头）
-    for row in query:    
-        row = list(row)
-        index_type = [1,2,3]
-        promoter_type = [u'高级推广员',u'中级推广员',u'初级推广员']
-        row[5] = promoter_type[index_type.index(row[5])]
-        row[6] = '%.2f'%(row[6]/100)
-        csv_writerow(writer, row)  #（写内容）
-    response = make_response(csvfile.getvalue().encode('utf-8'))    #从缓存中获取数据转化格式  from flask import make_response
-    response.headers.add("Content-Disposition","attachment", filename=(file_name + '.csv').encode('utf-8'))   #下载
-    
-    return response
+    def writer_csv(file_name,title_list,query):
+        csvfile = io.StringIO()      #缓存（py3 import io  ，py2 import cString）
+        writer = csv.writer(csvfile) #将数据写入缓存中
+        csv_writerow(writer, title_list) #调用写数据的方法（写表头）
+        for row in query:    
+            row = list(row)
+            index_type = [1,2,3]
+            promoter_type = [u'高级推广员',u'中级推广员',u'初级推广员']
+            row[5] = promoter_type[index_type.index(row[5])]
+            row[6] = '%.2f'%(row[6]/100)
+            csv_writerow(writer, row)  #（写内容）
+        response = make_response(csvfile.getvalue().encode('utf-8'))    #从缓存中获取数据转化格式  from flask import make_response
+        response.headers.add("Content-Disposition","attachment", filename=(file_name + '.csv').encode('utf-8'))   #下载  
+        return response
+
+二、上传图片通过io
+    1、读取前端的图片：
+        file = request.files['file'] /或 request.files.values()（需要遍历）
+    2、写入io
+        from io import StringIO,BytesIO
+        try:
+            file_ = BytesIO(file.read()) #写入io(字节类型)  py3{StringIO,BytesIO} py2{cString}  
+            f = file_.getvalue()  #从io中读出数据
+        except:
+            raise
+        finally:
+            file_.close()
+    3、保存到本地：
+        if not os.path.exists(path):  #判断文件是否存在
+        os.mkdirs(path)  #创建目录，类似终端的mkdir -r
+        open(dirname,'wb').write(f) #写入前对path进行配置
+    4、保存到oss：
+        a、oss配置
+        b、bucket.put_object(oss_file_name, f)  #上传到oss，直接在内存中读取
+    5、可以通过ajax实时同步到前端

@@ -20,7 +20,7 @@
 <script>
   $("#file0").change(function () {
     var url = GetURL(this.files[0]);
-
+    
     if (url) {
       $("#img0").attr("src", url);
       $("#img0").removeClass("hide");

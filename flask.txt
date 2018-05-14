@@ -1,17 +1,18 @@
 一、配置
 	1、全局变量：模板中继承UserMixin类，current_user.xxx直接调出对象对应的属性值
-	2、引入配置文件a、[.py文件] app.config.from_object('voteconfig')[配置文件的名字，数据库等配置信息可以放在此.py配置文件中]
-                  b、[json文件]:
-                    conf_file = os.path.normpath(os.path.join(__file__, '..', '..', 'config.json'))  获取json文件路径
-					try:
-						with open(conf_file, 'r', encoding='utf-8') as f:
-							conf = json.load(f) 将读出的内容转化成字典    
-					except BaseException as e:
-						sys.stderr.write('failed to read config %s: %s\n' % (conf_file, e))
-						conf = {}     如果不存在json文件设为空字典
-                 c、引用：
-                    第一种方法直接在__init__.py文件中调用 即可
-                    第二种方法需通过赋值引用(__init__文件中)：gs_redenvelop_url = conf["GS_RERDENVELOP_URL"]或 conf.get('aaa','')如果没有为空
+	2、引入配置文件：
+		a、[.py文件] app.config.from_object('voteconfig')[配置文件的名字，数据库等配置信息可以放在此.py配置文件中]
+		b、[json文件]:
+			conf_file = os.path.normpath(os.path.join(__file__, '..', '..', 'config.json'))  获取json文件路径
+			try:
+				with open(conf_file, 'r', encoding='utf-8') as f:
+					conf = json.load(f) 将读出的内容转化成字典    
+			except BaseException as e:
+				sys.stderr.write('failed to read config %s: %s\n' % (conf_file, e))
+				conf = {}     如果不存在json文件设为空字典
+		c、引用：
+			第一种方法直接在__init__.py文件中调用 即可
+			第二种方法需通过赋值引用(__init__文件中)：gs_redenvelop_url = conf["GS_RERDENVELOP_URL"]或 conf.get('aaa','')如果没有为空
        
 	3、	form 表单如果不加action 自动跳转到自己的对应的视图函数中
 		pip install -r requirements.txt（安装文件中的内容）   |  pip install -e . （安装的是setup.py中的内容）  
@@ -35,28 +36,36 @@
 		             db.session.add(promoter)
 		             db.session.commit()
 
-	3、查询数据：1、sql语句查询：sql = 'SELECT DATE(query_date), hour, count FROM hourly_count_user WHERE query_date between %s and %s '
+	3、查询数据：
+		1、sql语句查询：sql = 'SELECT DATE(query_date), hour, count FROM hourly_count_user WHERE query_date between %s and %s '
 		                        query = db.engine.execute(sql, start_time_str, end_time_str)
-                2、[sqlalchemy]
-					db.session.query(Role.id，Role.name).filter(Role.type!=0).group_by(Role.id,Role.name).order_by(Promoter.id).all()
-                                                                            [要分别以查询的所有字段进行分组，否则会抛错]
-					查询：query.filter(~User.name.in_(['ed', 'wendy', 'jack']))  查询不在列表中的数据
-						  query.filter(User.name.in_(['ed', 'wendy', 'jack']))   在列表里的数据
-                3、[flask-sqlalchemy]
-					Role.query.filter(Role.id == id).order_by(Role.id)
-                4、联表查询：(例中表1的id和表2的id相等且表1的id=1，查询表1的id并进行分组)
-                   indirect = db.session.query(Table1.id, func.sum(Table2.amount)).outerjoin(\
-                              Table2,Table2.id==Table1.id).filter(Table1.id==1).group_by(Promoter.id).all()
+        2、[sqlalchemy]
+			db.session.query(Role.id，Role.name).filter(Role.type!=0).group_by(Role.id,Role.name).order_by(Promoter.id).all()
+                                                                    [要分别以查询的所有字段进行分组，否则会抛错]
+			查询：query.filter(~User.name.in_(['ed', 'wendy', 'jack']))  查询不在列表中的数据
+				  query.filter(User.name.in_(['ed', 'wendy', 'jack']))   在列表里的数据
+        3、[flask-sqlalchemy]
+			Role.query.filter(Role.id == id).order_by(Role.id)
+        4、联表查询：(例中表1的id和表2的id相等且表1的id=1，查询表1的id并进行分组)
+           indirect = db.session.query(Table1.id, func.sum(Table2.amount)).outerjoin(\
+                      Table2,Table2.id==Table1.id).filter(Table1.id==1).group_by(Promoter.id).all()
 三、flask-sqlalchemy
-    1、from flask_sqlalchemy import SQLAlchemy    引入模块
+	1、from flask_sqlalchemy import SQLAlchemy    引入模块
 	2、app = Flask(__name__)   实例化app
 	3、app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'   连接数据库
-     {
-         mysql和postgresql ：mysql(postgresql)://username:passawd@hostname/database
-         sqlites : sqlite:///[c:/]absolute/path/database
-     4、db = SQLAlchemy(app)  实例化数据库 
-     5、迁移数据库： init   migrate   upgrade(downgrade取消更新)
-四、login：
+	 {
+		 mysql和postgresql ：mysql(postgresql)://username:passawd@hostname/database
+		 sqlites : sqlite:///[c:/]absolute/path/database
+	4、db = SQLAlchemy(app)  实例化数据库 
+	5、迁移数据库： init   migrate   upgrade(downgrade取消更新)
+    6、eg：
+		python manage.py db upgrade [version_id]  升级
+		python manage.py db downgade [version_id] 降级	
+
+四、flask_request：
     1、获取跳转前的路由：ref = request.referrer
+	2、获取上传的文件或者图片：
+		files = request.files.values() #多个文件
+		file = request.files['file'] #获取指定的文件
 
 
