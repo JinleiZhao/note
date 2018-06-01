@@ -33,3 +33,4 @@ git push -u origin master
 8、添加ssh 后sign_and_send_pubkey: signing failed: agent refused operation 
   eval "$(ssh-agent -s)"
   ssh-add 【-L/-D】 查看删除当前系统使用的密钥
+
