@@ -35,5 +35,8 @@ def unix_time():
     unix_ts = 1509636585.0
     times = datetime.datetime.fromtimestamp(unix_ts)
 	times.strftime('%Y-%m-%d %H:%M:%S')  #2017-11-02 23:29:45
+    或 datetime.strftime(times,'%Y-%m-%d %H:%M:%S')
+
+    
 
 

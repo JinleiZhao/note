@@ -28,17 +28,26 @@
 
 三、python操作hash简例（所有返回的数都是二进制，需要decode转化成utf-8）：
     import redis
-	r = redis.Redis(host="127.0.0.1",port=6379,password="",db=0)  
-		#链接本地redis(redis.Redis应换成redis.StrictRedis（后者使用官方的语法和命令，前者是后者的子类主要针对旧版本的redis.py）)
-	print r.hgetall("mykey:gg:1")  #获取键名下的所有键值对，返回字典形式
-	print r.hgetall("mykey:gg:1").values()  #获取键名下的所有值，返回列表形式  == r.hvals('mykey:gg:1')
-	print r.hgetall('mykey:gg:1').keys()	#获取键名下的所有键，返回列表形式  == r.hkeys('  ')
-	print r.hscan('mykey:gg:1',cursor=0,match="name") #通过迭代获取键值，match 后面跟键的正则，
-												eg:  print r.scan(0,match='mykey:gg:*')
-	mkey = r.keys("mykey:gg:*")     #获取所有的匹配键名（生产环境下避免用keys，尽量用scan）
- 	print mkey
-	for key in mkey:
-		print r.hget(key,'name')     #获取键名下键的对应值
+	1、
+		r = redis.Redis(host="127.0.0.1",port=6379,password="",db=0)  
+			#链接本地redis(redis.Redis应换成redis.StrictRedis（后者使用官方的语法和命令，前者是后者的子类主要针对旧版本的redis.py）)
+		print r.hgetall("mykey:gg:1")  #获取键名下的所有键值对，返回字典形式
+		print r.hgetall("mykey:gg:1").values()  #获取键名下的所有值，返回列表形式  == r.hvals('mykey:gg:1')
+		print r.hgetall('mykey:gg:1').keys()	#获取键名下的所有键，返回列表形式  == r.hkeys('  ')
+		print r.hscan('mykey:gg:1',cursor=0,match="name") #通过迭代获取键值，match 后面跟键的正则，
+													eg:  print r.scan(0,match='mykey:gg:*')
+		mkey = r.keys("mykey:gg:*")     #获取所有的匹配键名（生产环境下避免用keys，尽量用scan）
+		for key in mkey:
+			print r.hget(key,'name')     #获取键名下键的对应值
+	2、
+		a、hmset(name, mapping) 批量增加：r.hmset("hash2", {"k2": "v2", "k3": "v3"})
+		b、hmget(name, keys, *args) 批量获取:r.hmget("hash2", "k2", "k3") 或 r.hmget("hash2", ["k2", "k3"])
+		c、hexists(name, key) 判断键是否存在，返回值True False
+		d、hscan(name, cursor=0, match=None, count=None) #增量式迭代获取，并非一次性将数据全部获取完
+			name ：redis的name
+			cursor：游标（基于游标分批取获取数据）
+			match：匹配指定key，默认None 表示所有的key
+			count：每次分片最少获取个数，默认None表示采用Redis的默认分片个数（作用？）
 
 四、redis做有效时间验证(短信验证码)：
 	code = str(randint(100000,999999))   #生成验证码
@@ -49,7 +58,7 @@
 	def check_code(mobile, code):     #验证函数(参数为前端获取的验证码手机号)
 		k = 'sms_' + mobile
 		if r.get(k).decode('utf-8') == code:
-		    r.delete(k)               #验证成功后删除此组验证消息(注：若k没在redis中返回值为空，若此时前端获取的code是空，							
+		    r.delete(k)               #验证成功后删除此组验证消息(注：若k没在redis中返回值为空，若此时前端获取的code是空，
     									仍返回true，所以应先判断获取值是否为空)
 		    return True
 		return False
@@ -57,7 +66,7 @@
 五、FlaskRedis
 	1、引入：from flask_redis import FlaskRedis
 	2、实例化：redis_store = FlaskRedis(app)
-	3、利用redis的pipeline存储（pipeline是多条命令执行完后一次性返回结）
+	3、利用redis的pipeline存储（pipeline是多条命令执行完后一次性返回结，减少与数据库的交互次数，提高性能）
 	例：redis_store.pipeline().hmset('user_key',{
 		            'key1':'value1'
 		        }).expire('user_key',expire_time()(过期时间)).execute()
@@ -71,7 +80,23 @@
 七、redis事物
     1、redis语法①： [watch keys >>  unwatch(当监控的键存在时执行此语句停止监控) ] multi(启用)  >>  set ***(redis语句放入队列)  >> 
  											exec(提交)/	discard(取消)
-    2、python-redis: [ conn = conn.pipeline() ][conn.watch(keys)(新创建的键) >> unwatch() ]  >> conn.multi() >> conn.set ***(redis数据操作) >> 																												conn.execute()
+    2、python-redis: 
+		[ conn = conn.pipeline() ][conn.watch(keys)(新创建的键) >> unwatch() ]>> \
+		conn.multi() >> conn.set ***(redis数据操作) >> conn.execute()
+		例:
+		  a、链接：r = redis.StrictRedis(host='127.0.0.1',port=6001,db=0)
+		  b、pip = r.pipline()
+		  c、
+		  try:
+    ...:    [pip.watch('key') #watch需加上一个key（watchkey键, multi后如果该key被其他客户端改变, 事务操作会抛出WatchError异常）]
+    ...:    [pip.multi() #打开队列]
+    ...:     pip.set('s','a')
+    ...:     pip.set('w')
+    ...:     pip.execute()  
+    ...:  except:
+    ...:     pip.reset() #清空pipeline中待提交的命令
+
+		总结：使用pipline()时,用try捕获错误，当语句出现错误时跳过提交操作(execute),执行reset，清空待提交命令
 
 八、同一台服务器上配置多个redis实例(使用不同的端口启动)
     1、在/etc/redis/复制redis.conf文件并重命(名如redis6001.conf)
@@ -87,3 +112,21 @@
        输入密码：auth passwd   (若设置了密码)
        验证链接：ping  ==>  PONG
 
+九、redis基本命令string
+	1、语法：
+		set(name, value, ex=None, px=None, nx=False, xx=False)
+		a、name 字符串类型的key
+		b、value 字符串类型的值。
+		c、ex 过期时间（秒）
+		d、px 过期时间（毫秒）
+		e、nx 为TRUE时只有name不存在时才执行set
+		f、xx 为True时只有name存在时才执行set  
+		注：e、f若不执行时并不会出错
+	2、几个语法：
+		a、set(name,value,time) #time为过期时间，单位为秒
+		b、mset(*args, **kwargs) #批量设置值：
+				r.mget({'k1': 'v1', 'k2': 'v2'})
+				r.mset(k1="v1", k2="v2") #注意k1、k2没有引号
+		c、mget(keys, *args) #批量获取值 
+				r.mget('k1', 'k2') 或 r.mget(['k1', 'k2'])
+			

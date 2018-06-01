@@ -47,6 +47,28 @@
         e、可以将shadowsocks添加到supervisor，编写定时清理log定时任务   
     4、查看当前内核： dpkg -l 'linux-image-*' | grep '^ii'
 	5、刷新dns：sudo /etc/init.d/dns-clean start
+	6、更改文件夹所属人和组:
+		 sudo chown -R tyler[:tyler] huapai-admin/
+	7、dpkg安装，出现依赖问题：sudo apt --fix-broken install
+
+四、ubuntu创建桌面快捷方式（以火狐浏览器为例）
+	1、去官网下载压缩包，并解压
+	2、将加压后的文件放到/opt目录下（放第三方引用的地方）
+	3、进入/usr/share/applications 目录下创建xxx.desktop文件
+	4、以root权限进入并编辑：
+		Encoding=UTF-8
+		Name=firefox  #名字
+		Comment=Firefox IDE
+		Exec=/opt/firefox/firefox  #执行文件的位置
+		Icon=/opt/firefox/browser/chrome/icons/default/default32.png #桌面图标
+		Terminal=false   #是否在终端打开
+		StartupNotify=false
+		Type=Application
+		Categories=Application;Development;
+	5、保存退出。
+
+
+
 
 
 
