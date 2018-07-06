@@ -66,7 +66,7 @@
 	1、修改nginx值需重启nginx，修改项目文件只需重启supervisor
     2、重启时出错使用nginx -t -c /etc/nginx/nginx.conf查看出错位置
     3、检查supervisor出错：/usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
-                          sudo supervisorctl -c /etc/supervisor/supervisor.conf
+                          sudo supervisorctl -c /etc/supervisor/supervisord.conf
 	4、上传文件过大时nginx报413，解决方法：调大client_max_body_size 4m;值 位置/etc/nginx/nginx.conf
     5、不重启supervisor启动/停止某个任务：sudo supervisorctl start/restart/stop  name  ;program对应的名字
 

@@ -83,3 +83,17 @@
             };
         });
     3、jQuery实现简单图片上传预览，详见upload_.html
+
+四、form表单的提交事件
+    <form method='get' id='form'>
+     ...
+     <input type='submit' value='提交'>   #注：按钮为submit提交按钮
+    </form>
+
+    $('#form').submit(function(){
+        ...
+        #在此处进行提交前的验证等操作，同样可以在此处写ajax
+        if( .. ){
+            return false;  #如果提交前的验证不通过则利用此句阻止提交
+        }
+    })

@@ -1,0 +1,83 @@
+<html><head>
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="./menu.css">
+<script src="http://www.jsdaima.com/Upload/201703/1489127528/jquery.min.js"></script>
+</head>
+<body>
+<div class="btn3 clearfix">
+    <div class="menu">
+        <div class="bt-name">第个菜单</div>
+        <div class="sanjiao"></div>
+        <div class="new-sub left-sub" style="display: none;">
+            <ul>
+                <li><a href="javascript:;">二、第一个</a></li>
+                <li><a href="javascript:;">二、第二个</a></li>
+            </ul>
+            <div class="tiggle"></div>
+            <div class="innertiggle"></div>
+        </div>
+    </div><!--menu-->
+    <div class="menu">
+    <div class="bt-name">第个菜单</div>
+    <div class="sanjiao"></div>
+    <div class="new-sub" style="display: none;">
+        <ul>
+            <li><a href="javascript:;">小时钻石消耗2</a></li>
+            <li><a href="javascript:;">小时钻石消耗2</a></li>
+            <li><a href="javascript:;">小时钻石消耗2</a></li>
+        </ul>
+        <div class="tiggle"></div>
+        <div class="innertiggle"></div>
+    </div>
+    </div><!--menu-->
+    <div class="menu">
+    <div class="bt-name">第个菜单</div>
+    <div class="sanjiao"></div>
+    <div class="new-sub" style="display: none;">
+        <ul>
+            <li><a href="javascript:;">三、第一个</a></li>
+            <li><a href="javascript:;">三、第二个</a></li>
+            <li><a href="javascript:;">三、第三个</a></li>
+        </ul>
+        <div class="tiggle"></div>
+        <div class="innertiggle"></div>
+    </div>
+    </div><!--menu-->
+    <div class="menu">
+    <div class="bt-name">第个菜单</div>
+    <div class="sanjiao"></div>
+    <div class="new-sub" style="display: none;">
+        <ul>
+            <li><a href="javascript:;">三第一个</a></li>
+            <li><a href="javascript:;">三第二个</a></li>
+            <li><a href="javascript:;">三第三个</a></li>
+        </ul>
+        <div class="tiggle"></div>
+        <div class="innertiggle"></div>
+    </div>
+    </div><!--menu-->
+    <div class="menu">
+        <div class="bt-name">
+            <a href="javascript:;">首页</a>
+        </div>
+    </div>
+        <!--menu-->
+</div><!--btn3-->
+<script>
+//弹出垂直菜单
+$(".menu").click(function() {
+    if ($(this).hasClass("cura")) {
+        $(this).children(".new-sub").hide(); //当前菜单下的二级菜单隐藏
+        $(".menu").removeClass("cura"); //同一级的菜单项
+    } else {
+        $(".menu").removeClass("cura"); //移除所有的样式
+        $(this).addClass("cura"); //给当前菜单添加特定样式
+        $(".menu").children(".new-sub").slideUp("fast"); //隐藏所有的二级菜单
+        $(this).children(".new-sub").slideDown("fast"); //展示当前的二级菜单
+    }
+});
+</script>
+
+ </body>
+ </html>

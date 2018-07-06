@@ -50,22 +50,65 @@
            indirect = db.session.query(Table1.id, func.sum(Table2.amount)).outerjoin(\
                       Table2,Table2.id==Table1.id).filter(Table1.id==1).group_by(Promoter.id).all()
 三、flask-sqlalchemy
-	1、from flask_sqlalchemy import SQLAlchemy    引入模块
-	2、app = Flask(__name__)   实例化app
-	3、app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'   连接数据库
-	 {
-		 mysql和postgresql ：mysql(postgresql)://username:passawd@hostname/database
-		 sqlites : sqlite:///[c:/]absolute/path/database
-	4、db = SQLAlchemy(app)  实例化数据库 
-	5、迁移数据库： init   migrate   upgrade(downgrade取消更新)
+    1、from flask_sqlalchemy import SQLAlchemy    引入模块
+    2、app = Flask(__name__)   实例化app
+    3、app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'   连接数据库
+        {
+         mysql和postgresql ：mysql(postgresql)://username:passawd@hostname/database
+         sqlites : sqlite:///[c:/]absolute/path/database
+        }
+    4、db = SQLAlchemy(app)  实例化数据库 
+    5、迁移数据库： init   migrate   upgrade(downgrade取消更新)
     6、eg：
-		python manage.py db upgrade [version_id]  升级
-		python manage.py db downgade [version_id] 降级	
+        python manage.py db upgrade [version_id]  升级
+        python manage.py db downgade [version_id] 降级	
 
 四、flask_request：
     1、获取跳转前的路由：ref = request.referrer
-	2、获取上传的文件或者图片：
-		files = request.files.values() #多个文件
-		file = request.files['file'] #获取指定的文件
+    2、获取上传的文件或者图片：
+        files = request.files.values() #多个文件
+        file = request.files['file'] #获取指定的文件
 
+五、flask-admin
+    1、初始化admin
+    from flask_admin import Admin, helpers as admin_helpers  #引用
+    from flask_admin.contrib.sqla import ModelView
+    2、初始化
+    admin = Admin(app, name=u'游戏管理平台',
+              template_mode='bootstrap3',
+              base_template='admin/majiang_master.html')  #在主模板上增加新的新的功能
+    3、在主模板上添加功能按钮
+                   #进入此视图的显示和功能@a1   #表模型@a2
+    admin.add_view(DailyRegisterModelView(DailyRegister,db.session,
+                                        name=u'新增玩家报表', #菜单名（下拉菜单） 
+                                        category=u'数据收集',  #父级菜单名
+                                        need_role='report'))  #权限
+    4、@a1:
+    #此类可写在视图中（route）
+    class DailyRegisterModelView(ModelView): #继承，涉及权限时可以a集成ModelView,此类在继承a
+        column_labels = {'id':u'ID'}   #列显示的别名
+        can_create = False     #
+        can_delete = False
+        can_edit = False       #各行信息是否可创建、删除和编辑
+        column_default_sort = ('id', True)   #默认 排序
+        column_filters = (FilterLike(column=DailyRegister.platform, name=u'平台标识'),  #默认筛选器字段
+                        IntEqualFilter(column=DailyRegister.promoter_0_id, name=u'总代ID'),
+                        DateTimeBetweenFilter(column=DailyRegister.date, name=u'查询日期') 
+    5、创建表单
+    from wtforms.fields import SelectField
+    from wtforms import StringField, PasswordField
+    from wtforms.validators import Required, EqualTo
+    from flask_wtf import Form
 
+    class CreateForm(Form):
+        user = StringField(u'帐号',validators=[Required()])
+        pwd = PasswordField(u'密码', validators=[Required(), EqualTo('pwd2', message=u'两次密码必须一致!')])
+    #可直接使用表单提交数据
+
+    6、在基础莫班上添加新功能（如注册新用户）
+    from flask_admin import expose 
+    class PromoterModelView(ModelView): #此类继承modelview，涉及权限时操作方法如上
+        #方法写在此类的下面
+        @expose("/login_promoter/", methods=('GET',))
+        def login_promoter(self):
+            #操作同普通路由（此处使用form表单提交）

@@ -35,6 +35,9 @@
 		git reset --hard   commit_id   本地撤回到指定的commit
 			git push -f -u origin master  将次分支推送到远程
 
+	3、克隆执行分支，到指定目录
+		git clone http://47.93.188.254:3000/mj/promoter-admin.git -b kaiyuan jianli-admin/
+
        	https://www.pandafan.org/
 三、ubuntu
     1、gedit无法打开文件(默认ubuntu图形化不能打开一些文件需执行‘xhost +’ 命令)

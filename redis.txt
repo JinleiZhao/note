@@ -23,13 +23,16 @@
 		b、zrange 根据位置获取元素  eg：zrange myzsetkey 0 -1 withscores   
 		c、zrangebyscore 获取分值在给定范围内的所有元素  eg: zrangebyscore myzsetkey 0 800 withscores   
 		d、zrem 删除给定成员对应的分值
+	
+		r.zrange('match_1_ranking_list',0,-1,withscores=True)
 	6、获取数据库中所有的键：
 		keys [partten(可以进行匹配)] 返回列表的形式
 
 三、python操作hash简例（所有返回的数都是二进制，需要decode转化成utf-8）：
     import redis
 	1、
-		r = redis.Redis(host="127.0.0.1",port=6379,password="",db=0)  
+		r = redis.Redis(host="127.0.0.1",port=6379,password="",db=0，decode_responses=True)  
+																	#若不加此句则读出的数据数据为字节型，加上变成字符串型	
 			#链接本地redis(redis.Redis应换成redis.StrictRedis（后者使用官方的语法和命令，前者是后者的子类主要针对旧版本的redis.py）)
 		print r.hgetall("mykey:gg:1")  #获取键名下的所有键值对，返回字典形式
 		print r.hgetall("mykey:gg:1").values()  #获取键名下的所有值，返回列表形式  == r.hvals('mykey:gg:1')

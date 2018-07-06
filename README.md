@@ -27,6 +27,9 @@ git pull --rebase origin master
 
 git push -u origin master
 
+9、删除远程分支：
+git push origin --delete <name>
+
 7、若果使用ssh链接出现ssh: Could not resolve hostname github.com: Name or service not known
  解决办法 重启网卡 sudo service network-manager restart 或者 添加 github ip  www.github.com 到/etc/hosts
 
