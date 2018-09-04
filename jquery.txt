@@ -25,9 +25,10 @@
             "Accept": "application/json; charset=utf-8",
             "Content-Type": "application/json; charset=utf-8"
             }
-            url:'跳转地址/或{{ url_for('statistics_daily_diamond(跳转路由)') }}'
-            type:'post/get'
-            data:{传输的数据}
+            url:'跳转地址/或{{ url_for('statistics_daily_diamond(跳转路由)') }}',
+            type:'post/get',
+            data:{传输的数据},
+            beforeSend:function(){ //提交前的 },
             success：function(data){  //ajax成功执行调用函数
                 if(data.succ){  //后台succ=True执行
                     data.msg(后台传回的消息)
@@ -35,7 +36,9 @@
                 else：    //后台succ=False执行{
                     data.msg(后台传回的消息)
                 }
-            }
+            },
+            error:function(){ //程序返回出错 },
+            complete:function(){ //执行完返回的函数 }
         })
     2、注意事项：
         按钮通过ajax提交时，其type类型不能是submit类型，否则会提交两次

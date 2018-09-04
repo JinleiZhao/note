@@ -59,7 +59,7 @@
 四、启动文件(ubuntu)
 	1、命令位置：/usr/sbin/
 	2、检查nginx.conf配置  sudo ./nginx -t
-	3、重启 sudo ./nginx -s reload
+	3、重载 sudo ./nginx -s reload
 	4、停止 sudo ./nginx -s stop
 
 五、操作：

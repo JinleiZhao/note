@@ -105,8 +105,9 @@
             e、communicate：与子进程交互
        		eg：
  				p = subprocess.Popen(cmd,
-									 shell = True,        										 stdin = subprocess.PIPE,
-									            stdout = subprocess.PIPE,
+									 shell = True, 
+                                     stdin = subprocess.PIPE,
+									 stdout = subprocess.PIPE,
 									 stderr = ssubprocess.PIPE
 								     )
         		stdout, stderr = p.communicate()
@@ -129,13 +130,23 @@
     6、调用python的位置：
 		~/.pyenv/shims/python  
     7、设置当前工作环境的版本：
-		pyenv local/global  3.6.5   设置当前/全局工作环境的python版本
-        或 修改当前工作环境下的.python-version文件修改版本
+		pyenv local/global  3.6.5   设置当前/全局工作环境的python版本  
+         或 修改当前工作环境下的.python-version文件修改版本 
+         
+        @用第二种方法pyenv没有添加到环境变量，所以不能直接使用pyenv命令，只能添加.python-version,
+         天加环境变量后若是第一种方法可以直接用python，若是第二种方方法只能使用～/.pyenv/shims/python
+        
+
     8、安装完python后执行pyenv rehash 刷新shims中的python库
     9、查看python环境：python version/versions
 
-
-
+    注自动安装键chrome收藏:
+        1、$ curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+        2、$ pyenv update
+        若安装python失败可能缺少依赖：
+        sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+            libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+            xz-utils tk-dev libffi-dev liblzma-dev
 
 
 

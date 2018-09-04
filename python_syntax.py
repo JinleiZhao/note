@@ -34,6 +34,8 @@ foo = [2, 18, 9, 22, 17, 24, 8, 12, 27]
 print(list(filter(lambda x: x % 3 == 0, foo))) #[18, 9, 24, 12, 27],filter有比较等式需要返回ture或false
 print(list(map(lambda x: x * 2 + 10, foo)))#[14, 46, 28, 54, 44, 58, 26, 34, 64]，map返回每个传入变量返回的值
 print(reduce(lambda x, y: x + y, foo))#139
+'reduce原理：reduce(f, [x1, x2, x3, x4]) = f(f(f(x1, x2), x3), x4)\
+            reduce把结果继续和序列的下一个元素做累积计算'
 
 #b、应用在闭包中
 def get_y(a, b):                  
@@ -225,7 +227,8 @@ for n in range(10,999):
         if arv2(n,p) == -1:
             continue
         else:
-            print(n,p) 
+            # print(n,p) 
+            pass
 # print(arv(89,1))
 '''
 8、for和else:当for正常退出时执行else,否则不执行else(例如for循环被break)
@@ -256,3 +259,372 @@ lock = threading.Lock()
 with lock:  #无需加锁和解锁
     print('hhhh')
 
+'''
+10、列表生成式
+'''
+a = [(i,j) for i in range(10) for j in range(1, 10) if i != j]
+#   先执行第一个for 在执行第二个for ，在if判断
+
+b = [[i for i in range(10) if i != j] for j in range(1, 10)]
+# 先执行第二个for 在执行第一个for 在执行if
+# print(a)
+# print(b)
+
+'''
+11、os
+'''
+import os
+'''
+os.getcwd() 获取当前工作路径
+os.chdir('/bb/')  改变当前工作路径
+'''
+dirname = os.path.dirname(__file__)  #当前目录
+base = os.path.basename(__file__)   #当前工作文件
+
+print(dirname+base)
+print(os.path.join(dirname,'/hello/',base)) #'/hello/' 可省略
+print(os.path.splitext(base))    #路径+后缀
+print(os.path.abspath(__file__))
+
+'''
+12、字符串格式化
+'''
+'#1、通过对应的键获取对应的值'
+
+'%(a)s--%(b)s' % {"a": 1, "b": 2}
+'输出结果是：1--2'
+
+reply = "I'm %(name)s,now i study %(work)s!"
+
+person = {'name':'John','work':'Python'}
+
+print(reply % person)
+"结果：I'm John,now i study Python! "
+'''
+#vars() #返回当前工作场景下的所有赋值键值对
+'''
+'#2 format 格式化  s.format(..)'
+print('I am {name},I am {0},and now study {work}'.format(26, name='John', work='Python'))
+
+'format 字典/列表加方法'
+
+import sys
+print('{1[name]} is working on {0.platform}'.format(sys, {'name':'John'}))
+print('{person[name]} is working on {sys.platform}'.format(sys=sys, person={'name': 'John'}))
+
+dict2 = {'name': 'John', 'work': sys.platform}
+print('{0[name]} is working on {0[work]}'.format(dict2))
+
+list2 = ['John','linux']
+print('{0[0]} is working on {0[1]}'.format(list2))
+
+'''
+13、列表的操作
+'''
+'1、删除 del pop remove(element) pop(index)'
+l = ['a', 'b', 'c', 'd']
+
+del l[1]
+del l[1:]
+print(l)
+
+'2、追加列表 append <==> l[len(l):] = n, l1+l2产生新的列表速度相对慢'
+
+'''
+14、字典
+'''
+'1、创建字典的方法'
+l1 = [1,2,3,4,5]
+l2 = ['a','b','c','d','e']
+
+dic = dict(zip(l2,l1))  #先利用zip构建键值对，在用dict转化成字典
+print(dic)
+'2、以集合的形式直接获取字典的键 (py3)'
+
+key_set = dic.keys() & dic.keys()
+print(key_set)
+
+'''
+15、元组
+'''
+'1、排序'
+
+t = (2,1,4,3,5)
+l = list(t)
+l.sort() 
+'list排序：list.xxx() 不需重新赋给新的变量，改变原列表，random.shuffle与列表的方法类似'
+print(tuple(l)) #现转化为列表排序，在转化为元组
+
+'''
+16、文件操作
+'''
+import pickle
+
+'pickle.dump（date,file） 将数据(二进制)写入文件\
+ pickle.load(file) 将文件中的数据取出，返回原格式'
+
+f = open('./pick_test.txt','wb')
+data = [1,2,3,4,5]
+for i in range(3):
+    pickle.dump(str(data)+'\n',f)
+f.close()
+
+f = open('./pick_test.txt','rb')
+while True:
+    try:
+        data = pickle.load(f)
+        print(data,type(data))
+    except EOFError as e:
+        f.close()
+        print(e.args[0])
+        break
+'struct 构造并打包解析二进制文件,pack打包，unpack解析'
+import struct
+a,b,c = 45,b'john',8
+data = struct.pack('>i4sh',a,b,c) #i int类型，4s string类型长度为4，h short类型，类型之间相互意义对应
+print(data)
+data= struct.unpack('>i4sh',data) #前后的类型要一致
+print(data)
+ 
+'类似[],{},()'
+a = [
+    1,
+    2,
+    3
+]
+
+print(a)
+
+'''
+17、赋值
+'''
+s = [1,2,3,4]
+l = 'abcd'
+'变量前有一个*时，可匹配任意个数的变量，并将其组成列表，没有此项为空列表（函数的可变长参数）'
+a,*b,c = s
+*x,y,z = l
+print(a,b,c,x,y,z)
+
+
+'函数定义'
+'1、默认参数'
+def add(L=[1,2,3]):
+    L.append('a')
+    return L
+
+for i in range(3):
+    print(add())
+
+"输出结果:\
+    [1, 2, 3, 'a']\
+    [1, 2, 3, 'a', 'a']\
+    [1, 2, 3, 'a', 'a', 'a']"
+
+"廖雪峰网站：Python函数在定义的时候，默认参数L的值就被计算出来了，即[1,2,3]\
+，因为默认参数L也是一个变量，它指向对象[1,2,3]，每次调用该函数，\
+如果改变了L的内容，则下次调用时，默认参数的内容就变了，不再是函数定义时的[1,2,3]了"
+
+"个人理解：因为list是可变类型，每次执行函数时，改变是在L上进行，\
+既L所引用的值发生了变化，所以下次在调用L的时候L已经发生了变化.\
+若参数是不可变类型，L=1,在函数中虽然改变了L的值，但是实际上是改变了L的引用，\
+所以原参数并没有变"
+
+
+'2、可变参数'
+
+def calc(*numbers):
+    sum = 0
+    print(numbers)  # 参数numbers接收到的是一个tuple
+    for n in numbers:  
+        sum = sum + n
+    return sum
+
+print(calc(1,2,3,4)) 
+'使用可变参数，参数长度不固定，并且不用写成列表等形式'
+
+'将一个列表或元组当做可变参数传递过去，只需在列表或者元组前面加上*'
+list0 = [1,2,3,4]
+print(calc(*list0))
+
+'3、关键字参数'
+
+'键字参数允许你传入0个或任意个含参数名的参数，这些关键字参数在函数内部自动组装为一个dict'
+
+def person(name, age, **kw):
+    result = "name: %s, age: %s, other: %s"%(name, age, kw)
+    return result
+
+print(person('Bob', 35, city='Beijing'))
+"结果：name: Bob age: 35 other: {'city': 'Beijing'}"
+
+"将字典作为关键字参数传递到函数中,只需在字典前面加上**"
+dict0 = {'city': 'Beijing', 'job': 'Teacher'}
+print(person('Bob', 34, **dict0))
+
+'4、命名关键字参数（限制关键字参数允许的参数名，如果参数不是可用参数名，则会报错）'
+'a、关键字前面没有可变参数需使用*分隔开，*后面的为可以使用的关键字参数名'
+
+def person1(name, age, *, city, job):
+    return '%s is %s years old, in %s, work is %s'%(name, age, city, job)
+
+print(person1('Tom', 23, **dict0))
+
+'关键字参数签名有可变参数，不需要加*'
+def person2(name, age, *args, city, job):
+    return '%s, %s, %s, %s %s' %(name, age, args, city, job)
+
+print(person2('Tom', 12, *list0, **dict0))
+
+'尾递归：尾递归是指，在函数返回的时候，调用自身本身，并且，return语句不能包含表达式'
+'阶乘递归'
+
+def fact(n):
+    if n == 1:
+        return 1
+    return n * fact(n - 1) #return 含有乘法表达式，所以不是尾递归
+
+'尾递归'
+
+def fact(n):
+    return fact_iter(n, 1)
+
+def fact_iter(num, product):
+    if num == 1:
+        return product
+    return fact_iter(num - 1, num * product) #return 只返回函数，表达式作为参数
+
+"迭代器和可迭代对象"
+'生成器不但可以作用于for循环，还可以被next()函数不断调用并返回下一个值，直到最后抛出StopIteration错误表'
+'生成器都是Iterator对象，但list、dict、str虽然是Iterable，却不是Iterator。\
+ 把list、dict、str等Iterable变成Iterator可以使用iter()函数。'
+'可以被next()函数调用并不断返回下一个值的对象称为迭代器：Iterator。\
+ 可以使用isinstance()判断一个对象是否是Iterator对象。'
+
+'类的定义'
+
+'该类含有单个属性：宽、高和面积，宽高可读可写，面积只读'
+class Screen(object):
+    
+    #__slots__ = ('name', 'age')  # 用tuple定义允许绑定的属性名称, 只能在此类中使用，若被继承则不起作用
+    
+    @property   #只能读，不能设置
+    def width(self):
+        return self._width  #前面加上_ 或者__ 表示私有属性，在外面不能直接调用
+
+    @width.setter   #可以对属性进行赋值操作
+    def width(self, value):
+        self._width = value
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value):
+        self._height = value
+ 
+    @property   #只读
+    def resolution(self):
+        return self._width * self._height
+
+screen = Screen()
+screen.height = 12
+print(screen.height)
+
+class Student(object):
+    
+    count = 0  # count是类属性，也可以被作为实例属性，但是实例属性不能改变类属性
+
+    def __init__(self, name):
+        self.name = name   #实例属性，
+        Student.count += 1 #调用类属性 
+                           #s = Student()   s.count 类属性作为实例属性调用                
+    @property
+    def cou(self):
+        return self.count
+    
+    @cou.setter
+    def cou(self, value):
+        # Student.count = value
+        self.count = value
+
+student = Student('tom')
+print(student.cou)
+student.cou = 67
+print(student.cou)
+print(Student.count)
+
+
+"类的继承"
+
+class Car():  # 旧式类      Car(object) 新式类
+    def __init__(self, name="q7", year=1998):
+        self.name = name
+        self.year = year
+
+    def get_year(self):
+        return self.year
+
+    def get_name(self):
+        return self.name 
+
+
+class Audi(Car):
+    def __init__(self, name, color):
+        super().__init__(name) #要修改的属性，若不写则所有的属性都继承父类   
+        # self.name = name
+        self.year += 10
+        self.color = color  #子类新添加的属性
+    def get_name(self): #修改父类的方法
+        return '#####%s' % self.name
+
+class Daben(Car):
+    def __init__(self, name, color):
+        super(Daben, self).__init__()   #super的继承与父类没有太大的关系
+             #super中写的是本身
+        self.name = name
+        self.color = color
+        self.year += 10
+    def get_params(self):
+        return "!!!!!%s!!!!!!%s!!!!!%s"%(self.name, self.color, self.year)
+
+
+au = Audi("a4","blue")
+print(au.name, au.year, au.color, au.get_year(), au.get_name())  # a4 2008 2008 #####q7
+print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+ben = Daben("s500", "red")
+print(ben.get_params(), ben.get_name(), ben.get_year())
+
+'枚举'
+from enum import Enum
+Month = Enum('Month', ('Jan', 'Feb', 'Mar', 'Apr', 'May',
+                       'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+
+print(Month.Jan.name) # Jan
+print(Month.Jan.value) #1
+
+"Month.__members__: mappingproxy({'Apr': < Month.Apr: 4 >,\
+                                         ...\
+                                  'Sep': < Month.Sep: 9 >})"
+for month, value in Month.__members__.items():
+    print("%s ==>%s" %(month, value.value))
+
+"类枚举"
+
+from enum import unique
+@unique  # @unique装饰器可以帮助我们检查保证没有重复值。
+class Weekday(Enum):
+    Sun = 0  # Sun的value被设定为0
+    Mon = 1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
+    Sat = 6
+
+print(Weekday.__members__) #同上
+print(Weekday)
+print(Weekday.Sun.value)  #0
+print(Weekday.Sun.name) #Sun
+week = Weekday(1)
+print(week)  # <Weekday.Mon: 1>  <==>  Weekday.Mon

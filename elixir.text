@@ -1,0 +1,5 @@
+1、创建一个项目： mix new projectname
+2、可以在lib中添加各个功能
+3、安装依赖：在mix.exs文件deps私有函数中添加模块和版本，如： {:cowboy, "~> 1.0.0"},
+4、执行命令：mix deps.get 安装， mix deps.compile  modulename 重新编译模块， mix deps.clean modulename/ --all 清空某个模块或者全部模块
+5、运行 iex -S mix

@@ -54,6 +54,24 @@
 		 sudo chown -R tyler[:tyler] huapai-admin/
 	7、dpkg安装，出现依赖问题：sudo apt --fix-broken install
 
+	更新系统：
+	 1、installed grub-efi-amd64-signed package post-installation script subprocess returned error exit status 1
+		解决：
+		1、安装 grub-efi-amd64-signed 出错，efi空间不足，将其卸载后在重装 umount /boot/efi,
+		2、sudo gedit /var/lib/dpkg/info/grub-efi-amd64.postinst   编辑此文件 在set -a 下一行添加 exit 0 保存
+		3、执行 sudo dpkg --configure -a
+	2、更新系统后shadowsocks无法启动：
+		找到报错的文件（具体路径看错误提示【python中的路径】） 
+			/usr/local/lib/python2.7/dist-packages/shadowsocks/crypto/openssl.py  vim打开
+		命令模式下执行： :%s/cleanup/reset/  和 ：x  问题解决
+    3、服务器上出现乱码问题：显示lc_all 和lang的问题：
+	   修改文件：/etc/default/locale,添加内容：
+	           LANG="en_US.UTF-8"
+               LC_ALL="en_US.UTF-8"
+
+
+
+
 四、ubuntu创建桌面快捷方式（以火狐浏览器为例）
 	1、去官网下载压缩包，并解压
 	2、将加压后的文件放到/opt目录下（放第三方引用的地方）
@@ -70,7 +88,10 @@
 		Categories=Application;Development;
 	5、保存退出。
 
-
+五、创建用户
+	1、adduser username   #此方法直接提示输入密码并创建家目录和shell，useradd 只创建用户没有家目录和shell
+	2、给用户sudo权限： a、修改/etc/sudoers 下仿照root 
+					或者 b、将用户添加到sudo组，usermod username -G sudo
 
 
 
