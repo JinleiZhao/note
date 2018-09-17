@@ -3,7 +3,7 @@
         a、下载包 cd /tmp/ && wget https://dev.mysql.com/get/mysql-apt-config_0.8.3-1_all.deb
         b、安装 sudo dpkg -i mysql-apt-config_0.8.3-1_all.deb
         c、sudo apt-get update     sudo apt-get install mysql-server mysql-client
-        d、设置root密码关闭其他用户等  sudo mysql_secure_installation
+        d、设置root密码关闭其他用户等  sudo mysql_secure_installation (可选项)
     2、安装依赖：
         sudo apt-get install libmysqlclient-dev libmysqld-dev 
     3、安装python模块：
