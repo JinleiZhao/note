@@ -604,7 +604,6 @@ print(Month.Jan.name) # Jan
 print(Month.Jan.value) #1
 
 "Month.__members__: mappingproxy({'Apr': < Month.Apr: 4 >,\
-                                         ...\
                                   'Sep': < Month.Sep: 9 >})"
 for month, value in Month.__members__.items():
     print("%s ==>%s" %(month, value.value))

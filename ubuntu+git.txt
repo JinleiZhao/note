@@ -30,13 +30,22 @@
 		git checkout -b newname
 		在分支上 add  commit  切回主分支  git pull   合并git merge   提交git push
 		分支合并主分支  git rebase master
-	2、撤回远程仓库到某一版本
-		git log  查看对应的日志
-		git reset --hard   commit_id   本地撤回到指定的commit
-			git push -f -u origin master  将次分支推送到远程
 
 	3、克隆执行分支，到指定目录
 		git clone http://47.93.188.254:3000/mj/promoter-admin.git -b kaiyuan jianli-admin/
+
+
+	4、git 暂存与撤销   工作区（本地文件） --->   暂存区（.git中）  ---->  分支
+		git status 查看当前状态
+		git add 前
+		此时发现错误可以git checkout （-f） -- filename / . 取消对应提交的修改，或全部
+		git add filename / . 把修改提交到暂存区
+		git reset HEAD filename / . 把已经提交到暂存区的修改撤回到工作区，
+									在使用git checkout -f / -- filename / . 取消修改
+		git commit -m  提交到分支 
+		git log 查看提交历史， git reflog 查看历史命令(可获取回退前的commit id)
+		git reset --hard commit_id/HEAD^  会退到未来或者历史的某个版本
+		git push -f -u origin master  将次分支推送到远程
 
        	https://www.pandafan.org/
 三、ubuntu

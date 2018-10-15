@@ -150,7 +150,12 @@
     10、pip 豆瓣源安装：
         pip install xx xx [-r xx.txt] -i https://pypi.douban.com/simple/
 
+七、安装 matplotlib
 
+    1、pip install matplotlib -i https://pypi.douban.com/simple/ 
+    2、sudo apt-get install python3-tk tk-dev   安装unix依赖
+    若出现 If this fails your Python may not be configured for Tk，需重新编译
+    3、重新编译python（重新安装） ～/.pyenv/bin/pyenv[pyenv 若添加到环境变量] install 3.6.5    
 
 
 

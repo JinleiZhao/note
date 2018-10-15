@@ -9,7 +9,7 @@ Host tiaoban
 Host server
     HostName 192.168.8.1
     Port 22
-    User yaya   #进入服务器所用的用户
+    User yaya  
     ProxyCommand ssh -q -W %h:%p tiaoban
     IdentityFile ~/.ssh/id_rsa    #密钥在同目录下额不写
 
