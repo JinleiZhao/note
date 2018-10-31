@@ -627,3 +627,18 @@ print(Weekday.Sun.value)  #0
 print(Weekday.Sun.name) #Sun
 week = Weekday(1)
 print(week)  # <Weekday.Mon: 1>  <==>  Weekday.Mon
+
+
+############获取x内的所有素数############
+# In [85]: def primes(x):
+#     ...:     # prepair data space
+#     ...:     plist = [0, 0] + range(2,x+1)
+#     ...:     print(plist)
+#     ...:     for i in xrange(2, x):
+#     ...:         if plist[i]: #p[0]=0 返回false
+#     ...:             print('plist[%d]'%i)
+#     ...:             print('plist1',plist[i+i::i],id(plist))
+#     ...:             plist[i+i::i] = [0] * len(plist[i+i::i])
+#                      p[4::2]       = [0 ,0 ,0 ,0]   #分别用左列表中的元素代替右边对应索引位置的值
+#     ...:             print('plist2',plist[i+i::i],id(plist))
+#     ...:     return filter(None, plist)  #func为None时，True和False通过iter来确定
