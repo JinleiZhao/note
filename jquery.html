@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="checkbox" name="test" value="1" /><span>a</span>
+    <input type="checkbox" name="test" value="2" /><span>b</span>
+    <input type="checkbox" name="test" value="3" /><span>c</span>
+    <input type="checkbox" name="test" value="4" /><span>d</span>
+    <input type="checkbox" name="test" value="5" /><span>e</span>
+    <input type='button' value='提交' name="btn" />
+    <table cellspacing="0" border="1" style="border-collapse:collapse;">
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>2</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+    </table>
+</body>
+</html>
+<script type="text/javascript" src='./jquery.min.js'></script>
+<script>
+$(function(){
+    $('input[name=btn]').click(function(){
+        obj = $("input[name=test]");    
+        // obj = document.getElementsByName("test");
+        console.log(obj)
+        check_val = [];
+        // for(k in obj){
+        //     console.log(obj[k]);
+        //     if (obj[k].checked)
+        //         check_val.push(obj[k].value); // 此处是value不是val() 
+        // }
+        obj.each(function(index){
+            console.log(index)
+            console.log($(this))
+            if(this.checked){
+                check_val.push(this.value)
+            }
+        })
+        alert(check_val);
+    })
+
+})
+</script>

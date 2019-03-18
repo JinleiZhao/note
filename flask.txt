@@ -112,3 +112,6 @@
         @expose("/login_promoter/", methods=('GET',))
         def login_promoter(self):
             #操作同普通路由（此处使用form表单提交）
+
+六、将依赖追加到文档中
+    pip freeze >requirements.txt
