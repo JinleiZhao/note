@@ -102,6 +102,10 @@
 	2、给用户sudo权限： a、修改/etc/sudoers 下仿照root 
 					或者 b、将用户添加到sudo组，usermod username -G sudo
 
+六、远程链接：
+	1、scp, 复制多条
+	 scp user@server:/dir/\{file1,file2,...(逗号间没有空格)\} /dir/ 
+
 
 
 
