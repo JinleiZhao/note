@@ -2,8 +2,17 @@
     1、安装mysql：
         a、下载包 cd /tmp/ && wget https://dev.mysql.com/get/mysql-apt-config_0.8.3-1_all.deb
         b、安装 sudo dpkg -i mysql-apt-config_0.8.3-1_all.deb
-        c、sudo apt-get update     sudo apt-get install mysql-server mysql-client
-        d、设置root密码关闭其他用户等  sudo mysql_secure_installation (可选项)
+        c、sudo apt-get update
+        {
+            更新出现证书无效时：GPG 错误：http://repo.mysql.com/apt/ubuntu xenial InRelease: 下列签名无效： KEYEXPIRED 1550412832
+            执行 sudo apt-key list  看看过期的证书   pub   1024D/5072E1F5 2003-02-03 [已过期：2019-02-17]
+            执行 sudo apt-key del 5072E1F5 删除过期证书
+            再次执行跟新命令：sudo apt-get update  错误如: 由于没有公钥，无法验证下列签名： NO_PUBKEY (8C718D3B5072E1F5)
+            执行 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys (8C718D3B5072E1F5)  添加公玥
+            在次更新成功
+        }
+        d、sudo apt-get install mysql-server mysql-client
+        e、设置root密码关闭其他用户等  sudo mysql_secure_installation (可选项)
     2、安装依赖：
         sudo apt-get install libmysqlclient-dev libmysqld-dev 
     3、安装python模块：

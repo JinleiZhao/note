@@ -37,3 +37,5 @@ git push origin --delete <name>
   eval "$(ssh-agent -s)"
   ssh-add 【-L/-D】 查看删除当前系统使用的密钥
 
+9、通过跳转工具（git bash/ putty）用ssh登陆其他服务器时（或远程仓库），出现无法登陆时，在密钥正确的情况下执行：
+    ssh-agent bash  --》   ssh-add   在登陆（ssh -A aa@dd）/链接仓库
