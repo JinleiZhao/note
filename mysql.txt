@@ -1,0 +1,55 @@
+一、安装：
+    1、安装mysql：
+        a、下载包 cd /tmp/ && wget https://dev.mysql.com/get/mysql-apt-config_0.8.3-1_all.deb
+        b、安装 sudo dpkg -i mysql-apt-config_0.8.3-1_all.deb
+        c、sudo apt-get update
+        {
+            更新出现证书无效时：GPG 错误：http://repo.mysql.com/apt/ubuntu xenial InRelease: 下列签名无效： KEYEXPIRED 1550412832
+            执行 sudo apt-key list  看看过期的证书   pub   1024D/5072E1F5 2003-02-03 [已过期：2019-02-17]
+            执行 sudo apt-key del 5072E1F5 删除过期证书
+            再次执行跟新命令：sudo apt-get update  错误如: 由于没有公钥，无法验证下列签名： NO_PUBKEY (8C718D3B5072E1F5)
+            执行 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys (8C718D3B5072E1F5)  添加公玥
+            在次更新成功
+        }
+        d、sudo apt-get install mysql-server mysql-client
+        e、设置root密码关闭其他用户等  sudo mysql_secure_installation (可选项)
+    2、安装依赖（mysqlclient）：
+        sudo apt-get install libmysqlclient-dev libmysqld-dev python3-dev / python-dev
+    3、安装python模块：
+        pip install mysqlclient
+
+二、创建库并设置权限
+    1、创建数据库：mysql> create database if not exists（数据库名 game）default charset utf8 collate utf8_general_ci;
+    2、创建用户：mysql> create user 'game(用户名)'@'%(匹配主机，若设置成localhost只能本地访问 )' identified by 'nwgame(密码)';
+        [所有用户在mysql下的user表中]
+    3、设置权限：grant all privileges [select, insert, update, delete, create, drop,...] on game(库命).* to game(用户名);
+                将game库下的所有表的增删改查权限给game用户
+        [select user()  查看当前链接用户]
+    4、flush  privileges 刷新设置
+    5、revoke all on *(库名).*(表明) from game(用户); 取消用户所有数据库（表）的所有权限
+    6、delete from mysql.user where user='game';   删除用户(表中的数据)
+        drop user 'game'@'%';   删除用户
+
+三、django 操作数据库
+    1、通过python manage.py check 校验语法
+    2、迁移失败时：python manage.py makemigrations 出现 no change detected 时， 尝试迁移精确到某个app
+                 python manage.py makemigrations app_name  在更新：python manage.py migrate app_name
+    3、设置自增字段的起始值（在数据库中修改）：
+        alter table  表名  AUTO_INCREMENT =100;
+        查看是否修改成功：show table status
+
+
+[windows]安装：
+    1、pip install django  -i https://pypi.douban.com/simple
+    2、安装mysqlclient  pip install mysqlclent
+        {
+            错误：building 'MySQLdb._mysql' extension
+                 error: Microsoft Visual C++ 14.0 is required. Get it with "Microsoft Visual C++ Build Tools": http://landinghub.visualstudio.com/visual-cpp-build-tools
+            缺少对应的 xxx.whl
+            下载地址：https://www.lfd.uci.edu/~gohlke/pythonlibs/ 找到对应的版本下载
+            pip 安装对应XXX.whl
+            查看对应的版本：
+            进入python 环境：import pip
+            print(pip.pep425tags.get_supported())   
+        }
+    
