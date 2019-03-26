@@ -1,0 +1,81 @@
+#!/home/yaya/.pyenv/plugins/python
+
+import sys 
+import os
+import fileinput
+import getpass
+import configparser #解析配置文件
+import argparse #解析命令行参数
+import click  #argparse高级操作
+import logging
+
+#logging.basicConfig(level=logging.DEBUG) #直接打印
+logging.basicConfig(filename='app.log', level=logging.DEBUG)#保存到app.log文件中
+
+def main():
+    sys.argv.append("")
+    filename = sys.argv[1]
+    if not os.path.isfile(filename):
+        raise SystemExit(filename + " doesn't exists")
+    elif not os.access(filename, os.R_OK):
+        raise SystemExit(filename + ' is not accessible')
+    else:
+        print(filename + ' id accessible')
+
+def sys_():
+    for line in sys.stdin:
+        print(line, end="")
+
+
+def fileinput_():
+    l = []
+    for line in fileinput.input("/etc/passwd"):
+        meta = [fileinput.filename(), fileinput.fileno(), fileinput.filelineno(), fileinput.isfirstline(), fileinput.isstdin()]
+        l.append(line)
+        print(*meta, end="")
+    print(l[3])
+
+def getpass_():
+    user = getpass.getuser()#获取环境变量中用户名
+    passwd = getpass.getpass("your password: ")#等待用户输入 
+    print(user,passwd)
+
+def configparser_():
+    cf = configparser.ConfigParser(allow_no_value=True)#允许选项没有值
+    data = cf.read("/home/yaya/.gitconfig")#配置文件的路径
+    #print(data)
+    zhangjie = cf.sections() #获取配置文件中的章节[user]
+    print(zhangjie)
+    
+    #options = [] 
+    for yuansu in zhangjie:
+        options = cf.options(yuansu)
+        print(options)
+        logging.debug(options)        
+
+    for option in options:
+        print(option,cf.get(zhangjie[0],option)) 
+        
+    logging.debug('debug message')
+    logging.info('info message') 
+    logging.warn('warn message')
+    logging.error('error message')
+    logging.critical('critical message')   
+ 
+def argparse_():
+    parser = argparse.ArgumentParser()#创建一个解析器
+      
+@click.command()
+@click.option('--name', prompt='package name', help='install package')
+def install_(name):
+    click.echo(name)
+    os.system('~/.pyenv/plugins/pip install %s'%name)
+
+if __name__ == "__main__":
+    #main()
+    #sys_()
+    #fileinput_()
+    #getpass_()
+    #configparser_()
+    install_()
+#print(sys.argv)
