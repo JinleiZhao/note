@@ -2,6 +2,10 @@ from twisted.internet import protocol, reactor
 
 
 class Echo(protocol.Protocol):
+    def connectionMade(self):
+        clnt = self.clnt = self.transport.getPeer().host
+        print('connect from :', clnt)
+
     def dataReceived(self, data):
         # As soon as any data is received, write it back
         print('client said:',data)
@@ -30,6 +34,6 @@ dataReceived                 接收数据时调用
 connectionLost               关闭连接时调用
 
 '''
-
+print('waiting for connection...')
 reactor.listenTCP(8000, EchoFactory())
 reactor.run()

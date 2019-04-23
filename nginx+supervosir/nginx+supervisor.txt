@@ -81,3 +81,24 @@
 	2、匹配规则的优先级
 		首先匹配 =，其次匹配^~,其次是按文件中顺序的正则匹配，最后是交给 / 通用匹配。当有匹配成功时候，停止匹配，按当前匹配规则处理请求。
 
+command=/home/tyler/.pyenv/shims/python /home/tyler/work/promoter-admin/manage.py runfcgi -s /tmp/changtu_%(process_num)d.sock
+process_name=%(program_name)s_%(process_num)d
+numprocs=1
+directory=/home/tyler/work/promoter-admin
+environment=HOME="/home/tyler",USER="tyler"
+autostart = true
+autorestart = true
+user = tyler
+stdout_logfile = /var/log/supervisor/promoter/stdout%(process_num)d.log
+stderr_logfile = /var/log/supervisor/promoter/stderr%(process_num)d.log
+
+
+[program:changtu]
+command=/home/tyler/.pyenv/shims/python /home/tyler/work/promoter-admin/manage.py runserver -p 4006
+directory=/home/tyler/work/promoter-admin
+environment=HOME="/home/tyler",USER="tyler"
+autostart = true
+autorestart = true
+user = tyler
+stdout_logfile = /var/log/supervisor/promoter/stdout.log
+stderr_logfile = /var/log/supervisor/promoter/stderr.log
