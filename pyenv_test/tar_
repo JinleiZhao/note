@@ -1,0 +1,9 @@
+#!/home/yaya/.pyenv/plugins/python
+
+import tarfile
+
+with tarfile.open('/home/yaya/pyenv_test/os_dir.tar') as t:
+    for file in t.getnames():
+        #print(file)
+        t.extract(file,path='/home/yaya/Desktop')#文件，绝对路径
+    t.extractall(path='/home/yaya')

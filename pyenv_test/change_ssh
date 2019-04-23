@@ -1,0 +1,36 @@
+#!/home/yaya/.pyenv/shims/python
+
+import os 
+import subprocess
+
+def get_dir(pa, ssh):
+	#ssh = ['0','1','2']
+	#pa = '/home/yaya/.ssh'
+	od = ''
+	ssh_ = ssh[:]
+	for i in ssh_:
+		if os.path.isdir(pa+i):
+			od = ssh.pop(int(i))		
+	nd = ssh.pop()
+	return od, nd	
+
+def change_ssh(pa,od,nd):
+	com1 = "mv %s %s"%(pa, pa+nd)
+	print(com1)
+	com2 = "mv %s %s"%(pa+od, pa)
+	print(com2)
+	try:
+		code = subprocess.call(com1, shell=True)
+	except:
+		print('%s error!'%com1)
+	try:
+		code =subprocess.call(com2, shell=True)
+	except:
+		print('%s error!'%com2)
+	
+if __name__ == "__main__":
+	ssh = ['0','1','2']
+	pa = '/home/yaya/.ssh'
+	od, nd = get_dir(pa, ssh)
+	change_ssh(pa, od, nd)
+	print('complete!')

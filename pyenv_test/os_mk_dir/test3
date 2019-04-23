@@ -1,0 +1,43 @@
+#!/home/yaya/.pyenv/plugins/python
+
+import os
+
+#path = os.path.abspath(__file__)#__file__方法在交互ipython等交互环境中无法引用
+
+#directory = os.path.dirname(path)
+#dirname = os.path.dirname(__file__)
+
+#basename = os.path.basename(path)
+
+#full_dir = os.path.join(directory,basename)
+
+#split = os.path.splitext(path)
+
+#print("path:",path,full_dir)
+#print("dir:",directory,dirname)
+#print("filename:",basename)
+#print("split:",split)
+
+
+def get_file():
+   dir = os.path.expanduser("~")
+   #print(os.listdir(dir))
+   result = [item for item in os.listdir(dir) if \
+            os.path.isfile(os.path.join(dir,item))] #判断时需要加上路径，否则不识别
+   print(result)
+    
+def mk_dir():
+    path_ = os.path.abspath(__file__)
+    #print(path_)
+    dir_ = os.path.join(os.path.dirname(path_),"os_mk_dir")
+    #print(dir_)
+    if not os.path.isdir(dir_):
+        #os.chdir(dir_)#修改当前目录
+        os.mkdir(dir_)
+        print(dir_,'is create ok!')
+    else:
+        print(dir_,'is exist!')
+
+if __name__ == "__main__":
+    #get_file()
+    mk_dir()

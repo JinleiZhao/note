@@ -1,0 +1,19 @@
+#!/home/yaya/.pyenv/plugins/python 
+
+import subprocess
+
+select_com = "ps -ef | grep python | awk '/vote|DD/{print $2}'" #筛选vote或者包含DDD的行的第二列分隔符'|'('/vote|ddd'),-F指定分隔符
+
+p = subprocess.Popen(select_com, shell=True, stdout=subprocess.PIPE)
+
+#print(p.communicate()[0])
+pids = p.communicate()[0].decode('utf-8').replace('\n',' ')
+
+
+kill_com = "kill -9 {0}".format(pids)
+
+kill = subprocess.Popen(kill_com, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+stdout,stderr = kill.communicate()
+
+print(stdout,stderr,p.returncode,kill.returncode)

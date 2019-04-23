@@ -1,0 +1,15 @@
+#!/home/yaya/.pyenv/plugins/python
+
+import shutil
+import os
+
+path = os.path.expanduser('~/pyenv_test')
+dir_path = os.path.dirname(path)
+
+file_list = os.listdir(path)
+
+for file in file_list:
+    #print(file,os.path.getsize(file))
+    #if os.path.getsize(file) == 0:
+    if file == 'rm_dir': 
+        shutil.rmtree(file)

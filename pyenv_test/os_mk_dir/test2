@@ -1,0 +1,19 @@
+#!/home/yaya/.pyenv/plugins/python 
+
+from prompt_toolkit import prompt #可以实现跳到行首行末  
+from prompt_toolkit.history import FileHistory
+     #实现查看历史命令
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+     #联想功能
+from prompt_toolkit.contrib.completers import WordCompleter
+     #自动补全
+SQLCompleter = WordCompleter(['select','from','insert'],ignore_case=True)
+
+while True:
+    user_input = prompt('SQL>',
+                        auto_suggest=AutoSuggestFromHistory(),
+                        completer=SQLCompleter,
+    )
+    print(user_input)
+    if user_input == "q":
+        break

@@ -1,0 +1,15 @@
+#!/home/yaya/.pyenv/plugins/python
+
+import os 
+
+from collections import Counter
+
+c = Counter()
+print(c)
+with open(os.path.expanduser('~/.bash_history')) as f:
+    for line in f:
+        cmd = line.strip().split()
+        if cmd:
+            c[cmd[0]] += 1
+    #{cmd[0]:Counter(cmd[0]) for line in f if line.}
+print(c.most_common(15))
