@@ -25,7 +25,7 @@
 	
 三、数据库导入导出
     1、导出：
-        p_gsql 导出数据 pg_dump -U postgres -t system_calls(表名) wangye(库名) > ./test.sql  
+        p_gsql 导出数据 pg_dump -U postgres(用户名) -t system_calls(表名) wangye(库名) > ./test.sql  
     2、导入数据：
         a、$ psql -d newdatabase -U postgres -f mydatabase.sql   // sql 文件在当前路径下
 	    b、$psql -U zhao -d game -h localhost < /home/yaya/Downloads/2018-01-02_14_09_14_test.sql// sql 文件不在当前路径下

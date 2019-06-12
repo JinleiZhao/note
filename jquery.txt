@@ -100,3 +100,48 @@
             return false;  #如果提交前的验证不通过则利用此句阻止提交
         }
     })
+
+五、js中变量的定义
+    // js 全局作用域， 函数作用域， 块级作用域（ES6）
+    //JavaScript由ECMAScript和DOM(DOM是文档对象模型)、BOM(BOM是浏览器对象模型)三者组成
+    
+    // var定义的变量，没有块的概念，可以跨块访问, 不能跨函数访问。
+    // let定义的变量，只能在块作用域里访问，不能跨块访问，也不能跨函数访问。
+    // const用来定义常量，使用时必须初始化(即必须赋值)，只能在块作用域里访问，而且不能修改。
+
+    for(let i=0; i< 3; i++){
+        console.log("i", i)
+        let I = 9
+    }
+    try{
+        console.log("i",i,I)  //i,I只能在for中使用
+    }catch(e){
+        console.log("let")
+    }
+    for(var j=0; j< 3; j++){
+        var J = 9
+    }
+    console.log("j",j,J)
+    const a = 0
+    try{
+        a = 9
+    }catch(e){
+        console.log("const can't change")
+    }
+    console.log("A",a)
+    //错误
+    // for (const b =0; b < 6 ; b++){
+    //     console.log(b)
+    // }
+
+    //  const + 字典
+    // var dic = new Array() 定义数组保存字典元素   
+    const dic = {"a":1,"b":0}
+    dic.a = 7
+    console.log(dic)
+    delete dic.a   //字典删除
+    console.log(dic)
+    delete dic.b
+    console.log(dic)
+    // dic = [""] 
+    dic.a = "b"  //字典添加

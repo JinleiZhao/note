@@ -9,7 +9,7 @@ class MyDataBase:
     
     def __enter__(self):
         self.connect()
-        return self
+        return self  #f需要返回值
 
     def __exit__(self,exc_type, exc_val, exc_tb):
         self.close()

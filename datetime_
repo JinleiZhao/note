@@ -8,8 +8,8 @@ def yes_time():
     #当前时间减去一天 获得昨天当前时间
     yes_time = now_time + datetime.timedelta(days=-1)
     #格式化输出
-    yes_time_str = yes_time.strftime('%Y-%m-%d %H:%M:%S')
-    print yes_time_str  # 2017-11-01 22:56:02
+    yes_time_str = .strftime('%Y-%m-%d %H:%M:%S')
+    print yes_time_stryes_time  # 2017-11-01 22:56:02
 
 def dif_time():
     #计算两个时间之间差值
@@ -37,6 +37,22 @@ def unix_time():
 	times.strftime('%Y-%m-%d %H:%M:%S')  #2017-11-02 23:29:45
     或 datetime.strftime(times,'%Y-%m-%d %H:%M:%S')
 
-    
+                strftime
+datetime格式  ------------> 字符串：
+             <------------ 
+                strptime("格式")
+
+
+            timetuple()                  time.mktime
+datetime  --------------  timetuple   --------------->  时间戳
+                    <-------------------------
+                       datetime.fromtimestamp                   
+
+
+        time.strftime('格式'，timetuple[time.strptime])
+时间戳  ---------------------------------------------->   字符串
+       <----------------------------------------------
+          time.mktime(timetuple[函数：time.strptime])
+        
 
 

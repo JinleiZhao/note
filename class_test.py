@@ -90,7 +90,7 @@ class B(A):
     def __init__(self, a, b, c):
         # A.__init__(self, a, b)
         super(B,self).__init__(a, b)
-        self.c = c  #B中只有c这个属性，若不基层A则b.a,会报B没有这个属性
+        self.c = c  #B中只有c这个属性，若不继承A则b.a,会报B没有这个属性
 
 b = B(3,4,3)
 print(b.a,b.b,b.c)

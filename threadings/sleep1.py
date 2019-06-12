@@ -26,8 +26,9 @@ def main():
     print('starting at:', ctime())
     threads = []
     for i in range(len(loops)):   #生成对应的线程，统一放在列表中
-        t = MyThread(loop, (i, loops[i]), loop.__name__)
-        threads.append(t)  
+        # t = MyThread(loop, (i, loops[i]), loop.__name__)
+        t = threading.Thread(target=loop, args=(i, loops[i]), name=loop.__name__)
+        threads.append(t)
 
     for thread_ in threads: #执行所有的线程
         thread_.start()

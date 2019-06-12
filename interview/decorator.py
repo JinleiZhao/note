@@ -63,15 +63,15 @@ class Date:
         self.month=month
         self.day=day
 
-    # @staticmethod  #静态方法，类直接调用
-    # def now():
-    #     t=time.localtime()
-    #     return Date(t.tm_year,t.tm_mon,t.tm_mday)
-
-    @classmethod #改成类方法
-    def now(cls):
+    @staticmethod  #静态方法，类直接调用
+    def now():
         t=time.localtime()
-        return cls(t.tm_year,t.tm_mon,t.tm_mday) #哪个类来调用,即用哪个类cls来实例化
+        return Date(t.tm_year,t.tm_mon,t.tm_mday)
+
+    # @classmethod #改成类方法
+    # def now(cls):
+    #     t=time.localtime()
+    #     return cls(t.tm_year,t.tm_mon,t.tm_mday) #哪个类来调用,即用哪个类cls来实例化
 
 class EuroDate(Date):
     def __str__(self):
@@ -87,3 +87,71 @@ year:2017 month:3 day:3
 当不使用类方法时结果为（使用静态方法）：
 <__main__.Date object at 0x1013f9d68>
 '''
+
+'计算函数运行时间'
+
+from functools import wraps
+
+def calctime(func):
+    @wraps(func)
+    def inner(*args, **kw):
+        start_time = time.time()
+        print('func start at:',start_time)
+        r = func(*args, **kw)
+        run_time =  time.time()-start_time
+        print('func run time:',run_time)
+        return r
+    return inner
+
+@calctime
+def testfunc():
+    print("start")
+    time.sleep(2)
+    print('end')
+
+#testfunc()
+
+
+'staticmethod  静态方法'
+
+class MyClass:
+
+    age = 12
+
+    def __init__(self, name):
+        self.name = name
+
+
+    ' 返回函数的静态方法'
+    @staticmethod
+    def sum(x,y,z):   #变成了类的方法不需要传递实例
+        return x + y + z  
+    
+    'classmethod 修饰符对应的函数不需要实例化，不需要 self 参数，\
+        但第一个参数需要是表示自身类的 cls 参数，可以来调用类的属性，类的方法，实例化对象等。'
+    @classmethod
+    def setinit(cls,name):
+        return cls(name)
+
+    @staticmethod
+    def setinit2(name):
+        return MyClass(name)
+
+    def setsum(self):
+        return MyClass.sum(2,3,4)
+    
+    def __str__(self):
+        print('hello')
+
+print(MyClass.sum(1,2,3))   #类直接调用不需实例化，先实例化在调用也不报错
+b = MyClass.setinit('li')
+print(b.name)
+c = MyClass.setinit2('wang')
+print(c.name)
+print(c.age)
+s = MyClass('zhang')
+print(s.sum(1,2,3))
+print(s.setsum())
+
+
+'闭包作用----保存函数的状态信息，使函数的局部变量信息依然可以保存下来'
